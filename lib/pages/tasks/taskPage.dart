@@ -101,8 +101,6 @@ class _TaskPageState extends State<TaskPage> {
                           games[games.indexOf(assignedGame[i])],
                           games.indexOf(assignedGame[i]),
                           "13/01/2025"),
-                    gameCard("assets/images/colorGamePic.png", "Color Game", 2,
-                        "13/01/2025")
 
                     // for (int i = 0; i < games.length; i++)
                     //   gameCard(gameImagePaths[i], games[i], i, "13/01/2025"),
