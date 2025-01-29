@@ -43,10 +43,12 @@ class AuthMethods {
           model.User user = model.User(mail: mail, username: username);
 
           // Add user
-          await _firestore
-              .collection('users')
-              .doc(cred.user!.uid)
-              .set(user.toJson());
+          await _firestore.collection('users').doc(cred.user!.uid).set({
+            'userId': cred.user!.uid,
+            'username': username,
+            'email': mail,
+            'password': password,
+          });
 
           res = 'success';
         } else {
@@ -80,10 +82,12 @@ class AuthMethods {
           model.User user = model.User(mail: mail, username: username);
 
           // Add user
-          await _firestore
-              .collection('doctors')
-              .doc(cred.user!.uid)
-              .set(user.toJson());
+          await _firestore.collection('doctors').doc(cred.user!.uid).set({
+            'userId': cred.user!.uid,
+            'username': username,
+            'email': mail,
+            'password': password,
+          });
 
           res = 'success';
         } else {
