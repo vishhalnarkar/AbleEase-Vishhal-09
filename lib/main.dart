@@ -1,11 +1,9 @@
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
-<<<<<<< HEAD
-=======
 import 'package:ableeasefinale/pages/UI/signIn.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorPatientView.dart';
->>>>>>> faab717d1687b865ab630cf16f2545e846c1d579
 import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/UI/parentPage.dart';
+import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,9 +38,6 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-<<<<<<< HEAD
-        home: AuthWrapper(),
-=======
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
@@ -62,12 +57,11 @@ class MyApp extends StatelessWidget {
             }
 
             // return const LoginPage();
-            return const TaskPage();
+            return TaskPage();
             // return const DoctorSignIn();
           },
         ),
         // home: MedTest(),
->>>>>>> faab717d1687b865ab630cf16f2545e846c1d579
         theme: lightMode,
         darkTheme: darkMode,
         themeMode: ThemeMode.dark,
