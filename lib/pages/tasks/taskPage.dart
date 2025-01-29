@@ -1,63 +1,59 @@
-import 'package:ableeasefinale/pages/eyeBlink_Game.dart';
-import 'package:ableeasefinale/pages/eyeExercise_Game.dart';
-import 'package:ableeasefinale/pages/games/OddOut.dart';
-import 'package:ableeasefinale/pages/games/color_game_r.dart';
+import 'package:ableeasefinale/pages/games/memory_game/memory_gameR.dart';
+import 'package:ableeasefinale/pages/instructions/instr_color_game.dart';
+import 'package:ableeasefinale/pages/instructions/instr_memory_game.dart';
 import 'package:flutter/material.dart';
 
-class LowVisionPage2 extends StatefulWidget {
-  const LowVisionPage2({super.key});
+import '../eyeBlink_Game.dart';
+import '../eyeExercise_Game.dart';
+
+class TaskPage extends StatefulWidget {
+  const TaskPage({super.key});
 
   @override
-  State<LowVisionPage2> createState() => _LowVisionPage2State();
+  State<TaskPage> createState() => _TaskPageState();
 }
 
-class _LowVisionPage2State extends State<LowVisionPage2> {
+class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.background,
-        elevation: 0,
-      ),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 35, top: 24),
-            child: Text(
-              "Low Vision",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondary,
-                fontSize: 16,
+    return Padding(
+      padding: const EdgeInsets.only(top: 35),
+      child: DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              bottom: const TabBar(tabs: [
+                Tab(
+                  text: "Pending",
+                ),
+                Tab(
+                  text: "Completed",
+                ),
+              ]),
+              title: const Text(
+                "All Tasks",
+                style: TextStyle(),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 35, top: 0),
-            child: Text(
-              "Select a Game",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontSize: 36,
+            body: TabBarView(children: [
+              Container(
+                color: Colors.green,
               ),
-            ),
-          ),
-          // Game Cards
-          gameCard("assets/images/eye.png", "Eye Exercise", "Level 1", 0,
-              "EST: 30 sec"),
-          gameCard("assets/images/eyeGame.png", "Blink Test    ", "Level 2", 1,
-              "EST: 1 mins"),
-          gameCard("assets/images/eyeGame.png", "Odd Color out", "Level 3", 2,
-              "EST: 1 mins"),
-        ],
-      ),
+              Container(
+                color: Colors.yellow,
+              )
+            ]),
+          )),
     );
+    //         gameCard("assets/images/eye.png", "Eye Exercise", "Level 1", 0,
+    //             "EST: 30 sec"),
+    //         gameCard("assets/images/eyeGame.png", "Blink Test    ", "Level 2", 1,
+    //             "EST: 1 mins"),
+    //         gameCard("assets/images/eyeGame.png", "Odd Color out", "Level 3", 2,
+    //             "EST: 1 mins"),
+    //       ],
+    //     ),
+    //   );
   }
 
   Widget gameCard(String imgPath, String gName, String lvl, int pgSelector,
