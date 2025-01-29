@@ -1,23 +1,17 @@
+// ignore_for_file: camel_case_types, file_names
 import 'package:ableeasefinale/pages/UI/insightsPage.dart';
 import 'package:ableeasefinale/resources/auth_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-// import 'package:fl_chart_app/presentation/resources/app_resources.dart';
-// import 'package:fl_chart_app/util/extensions/color_extensions.dart';
-import 'package:fl_chart/fl_chart.dart';
-import '../../theme/appColors.dart';
-import '../../theme/profileBarChart.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class doctorProfilePage extends StatefulWidget {
+  const doctorProfilePage({super.key});
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<doctorProfilePage> createState() => _doctorProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _doctorProfilePageState extends State<doctorProfilePage> {
   var authMethods = AuthMethods();
   String username = "";
 
@@ -27,15 +21,34 @@ class _ProfilePageState extends State<ProfilePage> {
     getUsername();
   }
 
+  // Fetch the username of the current user - DB Stuff Start
   void getUsername() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('doctors')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
     setState(() {
       username = (snap.data() as Map<String, dynamic>)['username'];
+      username = username.substring(
+        8,
+      );
+      username = username.trim();
     });
+  }
+  // Fetch the username of the current user - DB Stuff End
+
+  String getGreetings() {
+    DateTime now = DateTime.now();
+    int currentHour = now.hour;
+
+    if (currentHour < 12) {
+      return "Good Morning,";
+    } else if (currentHour < 18) {
+      return "Good Afternoon,";
+    } else {
+      return "Good Evening,";
+    }
   }
 
   @override
@@ -69,28 +82,28 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hello,',
+                      getGreetings(),
                       style: const TextStyle(
                           fontSize: 25, fontWeight: FontWeight.w300),
                     ),
                     Expanded(
                       child: Text(
-                        '${username}',
+                        'Dr.$username',
+                        style: const TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.w400),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 40, fontWeight: FontWeight.w400),
                       ),
                     )
                   ],
                 ),
               ),
+
               // For Padding
-              const SizedBox(
-                width: 20,
-              ),
+              const Spacer(),
+
               Padding(
-                padding: const EdgeInsets.only(right: 0, top: 20, left: 30),
+                padding: const EdgeInsets.only(right: 20, top: 20, left: 30),
                 child: CircleAvatar(
                   radius: 67,
                   backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -103,8 +116,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ]),
           ),
 
-          // Padding Between Name
-          const SizedBox(height: 40),
+          // Spacer for Padding
+          const Spacer(),
 
           GestureDetector(
               child: Image(
@@ -114,29 +127,21 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               onTap: () {
                 Navigator.of(context).push(
+                    // Insights Page Here
                     MaterialPageRoute(builder: (context) => InsightsPage()));
               }),
-
-          //Bar Graphs
-          // const Center(
-          //   child: SizedBox(
-          //     height: 400,
-          //     child: MyBarChart(),
-          //   ),
-
-          // ),
-          //See insights button
 
           SizedBox(
             height: 36,
           ),
 
           // Logout Button
-          Container(
+          Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Center(
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 100),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor:
@@ -155,19 +160,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-
-          SizedBox(
-            height: 25,
-          ),
-
-          // Container(
-          //   color: Theme.of(context).colorScheme.primary,
-          //   height: 200,
-          //   width: 200,
-          //   child: Column(
-          //     children: [],
-          //   ),
-          // )
         ],
       ),
     );

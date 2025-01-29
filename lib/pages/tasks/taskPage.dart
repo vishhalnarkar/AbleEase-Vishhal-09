@@ -5,8 +5,6 @@ import 'package:ableeasefinale/pages/games/color_game_r.dart';
 import 'package:ableeasefinale/pages/games/flappyBird/flappyPage.dart';
 import 'package:ableeasefinale/pages/games/memory_game/memory_gameR.dart';
 import 'package:ableeasefinale/pages/games/snakeGame/home_page.dart';
-import 'package:ableeasefinale/pages/instructions/instr_color_game.dart';
-import 'package:ableeasefinale/pages/instructions/instr_memory_game.dart';
 import 'package:flutter/material.dart';
 
 import '../eyeBlink_Game.dart';
@@ -26,7 +24,6 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    int x;
     List<String> assignedGame = [
       "Odd Color Out",
       "Tetris Game",
