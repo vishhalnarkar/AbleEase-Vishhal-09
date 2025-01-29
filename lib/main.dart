@@ -1,6 +1,6 @@
-import 'package:ableeasefinale/pages/RegisterPatientDoctor.dart';
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
 import 'package:ableeasefinale/pages/UI/signIn.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,9 +41,8 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
-                return const ParentPage(); //default//
-                // return const TaskPage();
-                // return const SigninPatientdoctor();
+                // return const ParentPage();
+                return const doctorParentPage();
                 // return const DoctorSignIn();
               } else if (snapshot.hasError) {
                 return Center(
@@ -55,8 +54,8 @@ class MyApp extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            // return const LoginPage(); //Default
-            return const RegPatientdoctor();
+            // return const LoginPage();
+            return const doctorParentPage();
             // return const DoctorSignIn();
           },
         ),
