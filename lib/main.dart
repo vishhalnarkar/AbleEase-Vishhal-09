@@ -1,6 +1,7 @@
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/UI/parentPage.dart';
+import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,7 +53,9 @@ class MyApp extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            return const LoginPage();
+            // return const LoginPage();
+            return const TaskPage();
+            // return const DoctorSignIn();
           },
         ),
         // home: MedTest(),
