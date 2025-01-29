@@ -1,4 +1,4 @@
-buildscript {
+buildscript{
     ext.kotlin_version = '1.9.0'
     repositories {
         google()
@@ -10,9 +10,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.4.1'
     }
-
-  
-
 }
 
 allprojects {
@@ -33,4 +30,3 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
-

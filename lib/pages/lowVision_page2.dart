@@ -49,8 +49,10 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
           // Place Functions Here
           gameCard("assets/images/eye.png", "Eye Exercise", "Level 1", 0,
               "EST: 30 sec"),
-          gameCard("assets/images/eyeGame.png", "Blink Test    ", "Level 2",
-              1, "EST: 1 mins"),
+          gameCard("assets/images/eyeGame.png", "Blink Test    ", "Level 2", 1,
+              "EST: 1 mins"),
+          gameCard("assets/images/eyeGame.png", "Odd Color out", "Level 3", 2,
+              "EST: 1 mins"),
         ],
       ),
     );
@@ -141,6 +143,7 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
                         builder: (context) => switch (pageSelector) {
                           0 => const EyeExercise(),
                           1 => const EyeBlink(),
+                          2 => const EyeBlink(),
                           // TODO: Handle this case.
                           int() => throw UnimplementedError(),
                         },
