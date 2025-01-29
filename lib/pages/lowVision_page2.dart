@@ -1,5 +1,7 @@
 import 'package:ableeasefinale/pages/eyeBlink_Game.dart';
 import 'package:ableeasefinale/pages/eyeExercise_Game.dart';
+import 'package:ableeasefinale/pages/games/OddOut.dart';
+import 'package:ableeasefinale/pages/games/color_game_r.dart';
 import 'package:flutter/material.dart';
 
 class LowVisionPage2 extends StatefulWidget {
@@ -46,11 +48,13 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
               ),
             ),
           ),
-          // Place Functions Here
+          // Game Cards
           gameCard("assets/images/eye.png", "Eye Exercise", "Level 1", 0,
               "EST: 30 sec"),
-          gameCard("assets/images/eyeGame.png", "Blink Test    ", "Level 2",
-              1, "EST: 1 mins"),
+          gameCard("assets/images/eyeGame.png", "Blink Test", "Level 2", 1,
+              "EST: 1 min"),
+          gameCard("assets/images/OddOut.png", "Odd One Out", "Level 3", 2,
+              "EST: 1 min"),
         ],
       ),
     );
@@ -58,11 +62,6 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
 
   Widget gameCard(String imgPath, String gName, String lvl, int pgSelector,
       String estTime) {
-    String gameName = gName;
-    String level = lvl;
-    String imagePath = imgPath;
-    int pageSelector = pgSelector;
-    String estTimeReq = estTime;
     return Container(
       height: 200,
       margin: const EdgeInsets.only(top: 45, left: 35, right: 35),
@@ -74,10 +73,7 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
             color: Color.fromARGB(63, 0, 0, 0),
             blurRadius: 4.0,
             spreadRadius: -5.0,
-            offset: Offset(
-              0.0, // horizontal, move right 10
-              8.0, // vertical, move down 10
-            ),
+            offset: Offset(0.0, 8.0),
           )
         ],
       ),
@@ -91,13 +87,13 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      gameName,
+                      gName,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 22),
                     ),
                     Text(
-                      level,
+                      lvl,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSecondary,
                           fontSize: 13),
@@ -115,9 +111,7 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10)),
-                    child: Image(
-                      image: AssetImage(imagePath),
-                    ),
+                    child: Image.asset(imgPath, fit: BoxFit.cover),
                   ),
                 ),
               ),
@@ -129,7 +123,7 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
           ),
           Row(
             children: [
-              const Padding(padding: EdgeInsets.only(left: 30)),
+              const SizedBox(width: 30), // Ensures proper alignment
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
@@ -138,11 +132,17 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => switch (pageSelector) {
-                          0 => const EyeExercise(),
-                          1 => const EyeBlink(),
-                          // TODO: Handle this case.
-                          int() => throw UnimplementedError(),
+                        builder: (context) {
+                          switch (pgSelector) {
+                            case 0:
+                              return const EyeExercise();
+                            case 1:
+                              return const EyeBlink();
+                            case 2:
+                              return const Oddout(); // Make sure this class exists
+                            default:
+                              return const LowVisionPage2();
+                          }
                         },
                       ),
                     );
@@ -154,9 +154,7 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
                             color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 18,
                           )),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      const SizedBox(width: 5),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: Theme.of(context).colorScheme.secondary,
@@ -168,7 +166,7 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: Text(
-                  estTimeReq,
+                  estTime,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondary),
                 ),

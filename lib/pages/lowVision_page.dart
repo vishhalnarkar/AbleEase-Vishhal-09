@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class LowVisionPage extends StatefulWidget {
   const LowVisionPage({super.key});
 
@@ -45,25 +44,24 @@ class _LowVisionPageState extends State<LowVisionPage> {
               ),
             ),
           ),
-
           Container(
             height: 200,
             margin: const EdgeInsets.only(top: 45, left: 35, right: 35),
             decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(63, 0, 0, 0),
-                      blurRadius: 4.0,
-                      spreadRadius: -5.0,
-                      offset: Offset(
-                        0.0, // horizontal, move right 10
-                        8.0, // vertical, move down 10
-                      ),
-                    )
-                  ],
-                ),
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromARGB(63, 0, 0, 0),
+                  blurRadius: 4.0,
+                  spreadRadius: -5.0,
+                  offset: Offset(
+                    0.0, // horizontal, move right 10
+                    8.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
             child: Column(
               children: [
                 Row(
@@ -103,46 +101,42 @@ class _LowVisionPageState extends State<LowVisionPage> {
                 Divider(
                   height: 5,
                   color: Theme.of(context).colorScheme.onSecondary,
-
                 ),
                 Row(
                   children: [
                     const Padding(padding: const EdgeInsets.only(left: 30)),
-                    
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(shape: StadiumBorder(),
-                      backgroundColor: Theme.of(context).colorScheme.background,
-                      ),
+                        style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.background,
+                        ),
                         onPressed: () {},
                         child: Row(
                           children: [
-                            Text(
-                              "Start",
-                              style: TextStyle(
-                                  color:Theme.of(context).colorScheme.onPrimary,
+                            Text("Start",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   fontSize: 18,
-                                     
-                              )
-                              
-                            ),
+                                )),
                             const SizedBox(
                               width: 5,
                             ),
                             Icon(
-                             
-                            Icons.arrow_forward_ios_rounded,
-                            color: Theme.of(context).colorScheme.secondary,
-                            size: 18,
+                              Icons.arrow_forward_ios_rounded,
+                              color: Theme.of(context).colorScheme.secondary,
+                              size: 18,
                             )
-                            
                           ],
                         )),
                     Spacer(),
-                    
                     Padding(
                       padding: const EdgeInsets.only(right: 20),
-                      child: Text('EST: 3 mins',
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+                      child: Text(
+                        'EST: 3 mins',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary),
                       ),
                     )
                   ],
@@ -154,20 +148,20 @@ class _LowVisionPageState extends State<LowVisionPage> {
             height: 200,
             margin: const EdgeInsets.only(top: 20, left: 35, right: 35),
             decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(63, 0, 0, 0),
-                      blurRadius: 4.0,
-                      spreadRadius: -5.0,
-                      offset: Offset(
-                        0.0, // horizontal, move right 10
-                        8.0, // vertical, move down 10
-                      ),
-                    )
-                  ],
-                ),
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromARGB(63, 0, 0, 0),
+                  blurRadius: 4.0,
+                  spreadRadius: -5.0,
+                  offset: Offset(
+                    0.0, // horizontal, move right 10
+                    8.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
             child: Column(
               children: [
                 Row(
@@ -207,46 +201,42 @@ class _LowVisionPageState extends State<LowVisionPage> {
                 Divider(
                   height: 5,
                   color: Theme.of(context).colorScheme.onSecondary,
-
                 ),
                 Row(
                   children: [
                     const Padding(padding: const EdgeInsets.only(left: 30)),
-                    
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(shape: StadiumBorder(),
-                      backgroundColor: Theme.of(context).colorScheme.background,
-                      ),
+                        style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.background,
+                        ),
                         onPressed: () {},
                         child: Row(
                           children: [
-                            Text(
-                              "Start",
-                              style: TextStyle(
-                                  color:Theme.of(context).colorScheme.onPrimary,
+                            Text("Start",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   fontSize: 18,
-                                     
-                              )
-                              
-                            ),
+                                )),
                             const SizedBox(
                               width: 5,
                             ),
                             Icon(
-                             
-                            Icons.arrow_forward_ios_rounded,
-                            color: Theme.of(context).colorScheme.secondary,
-                            size: 18,
+                              Icons.arrow_forward_ios_rounded,
+                              color: Theme.of(context).colorScheme.secondary,
+                              size: 18,
                             )
-                            
                           ],
                         )),
                     Spacer(),
-                    
                     Padding(
                       padding: const EdgeInsets.only(right: 20),
-                      child: Text('EST: 3 mins',
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+                      child: Text(
+                        'EST: 3 mins',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary),
                       ),
                     )
                   ],
@@ -256,28 +246,29 @@ class _LowVisionPageState extends State<LowVisionPage> {
           ),
           Container(
             height: 200,
-            margin: const EdgeInsets.only(top: 20, left: 35, right: 35, bottom: 20),
+            margin:
+                const EdgeInsets.only(top: 20, left: 35, right: 35, bottom: 20),
             decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(63, 0, 0, 0),
-                      blurRadius: 4.0,
-                      spreadRadius: -5.0,
-                      offset: Offset(
-                        0.0, // horizontal, move right 10
-                        8.0, // vertical, move down 10
-                      ),
-                    )
-                  ],
-                ),
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromARGB(63, 0, 0, 0),
+                  blurRadius: 4.0,
+                  spreadRadius: -5.0,
+                  offset: Offset(
+                    0.0, // horizontal, move right 10
+                    8.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
             child: Column(
               children: [
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top:0, left: 30),
+                      padding: const EdgeInsets.only(top: 0, left: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -311,46 +302,42 @@ class _LowVisionPageState extends State<LowVisionPage> {
                 Divider(
                   height: 5,
                   color: Theme.of(context).colorScheme.onSecondary,
-
                 ),
                 Row(
                   children: [
                     const Padding(padding: const EdgeInsets.only(left: 30)),
-                    
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(shape: StadiumBorder(),
-                      backgroundColor: Theme.of(context).colorScheme.background,
-                      ),
+                        style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.background,
+                        ),
                         onPressed: () {},
                         child: Row(
                           children: [
-                            Text(
-                              "Start",
-                              style: TextStyle(
-                                  color:Theme.of(context).colorScheme.onPrimary,
+                            Text("Start",
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   fontSize: 18,
-                                     
-                              )
-                              
-                            ),
+                                )),
                             const SizedBox(
                               width: 5,
                             ),
                             Icon(
-                             
-                            Icons.arrow_forward_ios_rounded,
-                            color: Theme.of(context).colorScheme.secondary,
-                            size: 18,
+                              Icons.arrow_forward_ios_rounded,
+                              color: Theme.of(context).colorScheme.secondary,
+                              size: 18,
                             )
-                            
                           ],
                         )),
                     Spacer(),
-                    
                     Padding(
                       padding: const EdgeInsets.only(right: 20),
-                      child: Text('EST: 3 mins',
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+                      child: Text(
+                        'EST: 3 mins',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary),
                       ),
                     )
                   ],
