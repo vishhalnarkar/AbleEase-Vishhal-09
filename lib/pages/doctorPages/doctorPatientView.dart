@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,68 +11,195 @@ class DoctorPatientView extends StatefulWidget {
 
 class _DoctorPatientViewState extends State<DoctorPatientView> {
   List<String> allPatients = []; // Store all patient names
-  List<String> filteredPatients = []; // Filtered list for search
-  bool isDropdownVisible = false; // Toggle for dropdown visibility
+  String? fetchedPatientId; // Nullable string
+  List<Map<String, dynamic>> assignedPatients = []; // Store assigned patients
+  Future<void> fetchAssignedPatients() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('doctors')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (snapshot.exists) {
+        List<dynamic>? patients = snapshot['DoctorAssignedPatients'];
+
+        if (patients != null) {
+          print("Patients is not null");
+          setState(() {
+            assignedPatients = List<Map<String, dynamic>>.from(patients);
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching assigned patients: $e");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     fetchPatientNames();
+    fetchAssignedPatients();
   }
 
   /// Fetch all patient names from Firestore
   Future<void> fetchPatientNames() async {
     try {
       QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('patients').get();
+          await FirebaseFirestore.instance.collection('patient').get();
       setState(() {
         allPatients =
-            snapshot.docs.map((doc) => doc['name'].toString()).toList();
-        filteredPatients = allPatients; // Initialize filtered list
+            snapshot.docs.map((doc) => doc['PatientName'].toString()).toList();
       });
     } catch (e) {
       debugPrint('Error fetching patient names: $e');
     }
   }
 
+// FirebaseAuth.instance.currentUser!.uid
+
   /// Fetch patient details based on selected name
   Future<Map<String, dynamic>?> getPatientDetails(String name) async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('patients')
-          .where('name', isEqualTo: name)
+          .collection('patient')
+          .where('PatientName', isEqualTo: name)
           .limit(1)
           .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        var doc = snapshot.docs.first;
-        return {
-          'age': doc['age'],
-          'diagnosis': doc['diagnosis'],
-        };
-      }
+      print("Got here somehow");
     } catch (e) {
       debugPrint('Error fetching patient details: $e');
     }
     return null;
   }
 
-  /// Show Patient Form with integrated search field
+  /// Show Patient Form with dropdown
   void showPatientForm(BuildContext context) {
-    final nameController = TextEditingController();
-    final ageController = TextEditingController();
-    final diagnosisController = TextEditingController();
     String? selectedPatient;
 
-    void filterSearchResults(String query) {
-      setState(() {
-        filteredPatients = allPatients
-            .where((patient) =>
-                patient.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-        isDropdownVisible =
-            filteredPatients.isNotEmpty; // Show dropdown if matches found
-      });
+    Future<String?> getPatientId() async {
+      try {
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('patient')
+            .where('PatientName', isEqualTo: selectedPatient)
+            .limit(1)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          return snapshot.docs.first.id; // Get the document ID
+        } else {
+          debugPrint("Patient not found");
+          return null;
+        }
+      } catch (e) {
+        debugPrint("Error getting patient ID: $e");
+        return null;
+      }
+    }
+
+    Future<void> fetchPatientId() async {
+      fetchedPatientId = await getPatientId();
+      print("Fetched Patient ID: $fetchedPatientId");
+    }
+
+    Future<Map<String, String>?> getDoctorDetails() async {
+      try {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('doctors')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+        if (snapshot.exists && snapshot.data() != null) {
+          var data = snapshot.data() as Map<String, dynamic>;
+          return {
+            'id': snapshot.id, // Document ID
+            'name':
+                data['DoctorName'] ?? 'Unknown' // Doctor's Name from Firestore
+          };
+        } else {
+          debugPrint("Doctor not found");
+          return null;
+        }
+      } catch (e) {
+        debugPrint("Error getting doctor details: $e");
+        return null;
+      }
+    }
+
+    Future<void> assignPatientData() async {
+      Map<String, String>? doctorDetails = await getDoctorDetails();
+      try {
+        await FirebaseFirestore.instance
+            .collection('patient')
+            .doc(fetchedPatientId)
+            .set(
+                {
+              'AssignedDoctorName': doctorDetails?['name'],
+              'AssignedDoctorId': doctorDetails?['id'],
+            },
+                SetOptions(
+                    merge:
+                        true)); // Merges with existing data instead of overwriting
+        print("Data assigned successfully");
+      } catch (e) {
+        print("Error assigning data: $e");
+      }
+    }
+
+    Future<Map<String, dynamic>?> getPatientDetails() async {
+      try {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('patient') // Firestore collection
+            .doc(fetchedPatientId) // Specific patient's document ID
+            .get();
+
+        if (snapshot.exists && snapshot.data() != null) {
+          var data = snapshot.data() as Map<String, dynamic>;
+          return {
+            // Firestore Document ID
+            'name': data['PatientName'] ?? '', // Patient's Name
+            'PatientUid': data['PatientUid'] ?? '', // Patient's Name
+          };
+        } else {
+          debugPrint("Patient not found");
+          return null;
+        }
+      } catch (e) {
+        debugPrint("Error getting patient details: $e");
+        return null;
+      }
+    }
+
+    Future<void> fetchAndUsePatientDetails() async {
+      String? patientId = fetchedPatientId; // Replace with actual patient ID
+
+      Map<String, dynamic>? patientDetails = await getPatientDetails();
+
+      if (patientDetails != null) {
+        print("Patient Details: $patientDetails");
+
+        try {
+          await FirebaseFirestore.instance
+              .collection('doctors')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .set(
+                  {
+                'DoctorAssignedPatients': FieldValue.arrayUnion([
+                  {
+                    'Patientname': patientDetails['name'],
+                    'PatientUid': patientDetails['PatientUid'],
+                    'PatientId': fetchedPatientId,
+                  }
+                ])
+              },
+                  SetOptions(
+                      merge:
+                          true)); // Merges with existing data instead of overwriting
+          print("Data assigned successfully");
+        } catch (e) {
+          print("Error assigning data: $e");
+        }
+      }
     }
 
     showDialog(
@@ -85,88 +213,31 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Search Field
-                  TextField(
-                    controller: nameController,
-                    onChanged: (value) {
+                  // Dropdown Menu
+                  DropdownButtonFormField<String>(
+                    value: selectedPatient, // Default value
+                    hint: const Text("Select a patient"),
+                    items: allPatients.map((patient) {
+                      return DropdownMenuItem<String>(
+                        value: patient,
+                        child: Text(patient),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) async {
                       setDialogState(() {
-                        filterSearchResults(value);
-                      });
-                    },
-                    onTap: () {
-                      setDialogState(() {
-                        isDropdownVisible = true;
+                        print("Now init patient Id");
+                        selectedPatient = newValue;
+                        fetchPatientId();
+                        print(fetchedPatientId);
                       });
                     },
                     decoration: InputDecoration(
-                      labelText: 'Search Patient',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Dropdown list of suggested names
-                  if (isDropdownVisible)
-                    Container(
-                      height: 150, // Limit the height of the dropdown
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListView.builder(
-                        itemCount: filteredPatients.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(filteredPatients[index]),
-                            onTap: () async {
-                              nameController.text = filteredPatients[index];
-                              setDialogState(() {
-                                isDropdownVisible = false; // Hide dropdown
-                              });
-
-                              // Fetch and autofill patient details
-                              Map<String, dynamic>? patientData =
-                                  await getPatientDetails(
-                                      filteredPatients[index]);
-                              if (patientData != null) {
-                                setDialogState(() {
-                                  ageController.text =
-                                      patientData['age'].toString();
-                                  diagnosisController.text =
-                                      patientData['diagnosis'];
-                                });
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-
-                  const SizedBox(height: 10),
-
-                  // Age Field
-                  TextField(
-                    controller: ageController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Age',
+                      labelText: 'Patient Name',
                       border: OutlineInputBorder(),
                     ),
                   ),
 
                   const SizedBox(height: 10),
-
-                  // Diagnosis Field
-                  TextField(
-                    controller: diagnosisController,
-                    decoration: const InputDecoration(
-                      labelText: 'Diagnosis',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
                 ],
               );
             },
@@ -174,15 +245,24 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Color(0xffEA3EF7)),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
+                getPatientId();
+                getDoctorDetails();
+                assignPatientData();
+                getPatientDetails();
+                fetchAndUsePatientDetails();
                 Navigator.of(context).pop();
-                debugPrint(
-                    'Name: ${nameController.text}, Age: ${ageController.text}, Diagnosis: ${diagnosisController.text}');
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Color(0xffEA3EF7)),
+              ),
             ),
           ],
         );
@@ -195,17 +275,10 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
+        leading: null,
         title: const Text('Patient View'),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
-      body: ListView(children: [
-        patientTile("Patient 1", "ADHD", 12, 13),
-        patientTile("Patient 2", "Autism", 10, 15),
-        patientTile("Patient 3", "Down Syndrome", 8, 10),
-        patientTile("Patient 4", "Cerebral Palsy", 5, 8),
-        patientTile("Patient 5", "Dyslexia", 3, 5),
-        patientTile("Patient 6", "Diagnosis", 2, 4),
-      ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).colorScheme.secondary,
         child: Icon(
@@ -217,11 +290,23 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
           showPatientForm(context);
         },
       ),
+      body: assignedPatients.isEmpty
+          ? const Center(
+              child: CircularProgressIndicator()) // Show loader if no data
+          : ListView.builder(
+              itemCount: assignedPatients.length,
+              itemBuilder: (context, index) {
+                var patient = assignedPatients[index];
+                return patientTile(
+                  patient['Patientname'] ?? "Unknown",
+                  patient['PatientUid'] ?? "Unknown",
+                );
+              },
+            ),
     );
   }
 
-  Widget patientTile(String name, String diagnosis, int totalTasksCompleted,
-      int totalTasksAssigned) {
+  Widget patientTile(String name, String uid) {
     return Padding(
       padding: const EdgeInsets.only(left: 17, right: 17, top: 17),
       child: Container(
@@ -243,15 +328,15 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
                 ),
               ),
               Text(
-                diagnosis,
+                "Uid: $uid",
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
-              const SizedBox(height: 12),
-              Text("Total Tasks Completed: $totalTasksCompleted"),
-              Text("Total Tasks Assigned: $totalTasksAssigned"),
+              // const SizedBox(height: 12),
+              // Text("Total Tasks Completed: $totalTasksCompleted"),
+              // Text("Total Tasks Assigned: $totalTasksAssigned"),
             ],
           ),
         ),
