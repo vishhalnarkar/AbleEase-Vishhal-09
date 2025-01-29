@@ -158,7 +158,7 @@ class _doctorHomePageState extends State<doctorHomePage> {
         .get();
 
     setState(() {
-      username = (snap.data() as Map<String, dynamic>)['username'];
+      // username = (snap.data() as Map<String, dynamic>)['username'];
       // username=username.substring(8,);
       // username=username.trim();
     });
