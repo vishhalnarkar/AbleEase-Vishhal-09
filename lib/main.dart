@@ -1,8 +1,6 @@
 import 'package:ableeasefinale/pages/RegisterPatientDoctor.dart';
-import 'package:ableeasefinale/pages/SignInPatientDoctor.dart';
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
 import 'package:ableeasefinale/pages/UI/signIn.dart';
-import 'package:ableeasefinale/pages/doctorPages/doctorSignIn.dart';
 import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -51,10 +51,10 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
           // Game Cards
           gameCard("assets/images/eye.png", "Eye Exercise", "Level 1", 0,
               "EST: 30 sec"),
-          gameCard("assets/images/eyeGame.png", "Blink Test    ", "Level 2", 1,
-              "EST: 1 mins"),
-          gameCard("assets/images/eyeGame.png", "Odd Color out", "Level 3", 2,
-              "EST: 1 mins"),
+          gameCard("assets/images/eyeGame.png", "Blink Test", "Level 2", 1,
+              "EST: 1 min"),
+          gameCard("assets/images/OddOut.png", "Odd One Out", "Level 3", 2,
+              "EST: 1 min"),
         ],
       ),
     );
@@ -132,12 +132,17 @@ class _LowVisionPage2State extends State<LowVisionPage2> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => switch (pgSelector) {
-                          0 => const EyeExercise(),
-                          1 => const EyeBlink(),
-                          2 => const EyeBlink(),
-                          // TODO: Handle this case.
-                          int() => throw UnimplementedError(),
+                        builder: (context) {
+                          switch (pgSelector) {
+                            case 0:
+                              return const EyeExercise();
+                            case 1:
+                              return const EyeBlink();
+                            case 2:
+                              return const Oddout(); // Make sure this class exists
+                            default:
+                              return const LowVisionPage2();
+                          }
                         },
                       ),
                     );
