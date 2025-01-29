@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            // return const LoginPage(); //Default
-            return const RegPatientdoctor();
+            return const LoginPage(); //Default
+            // return const RegPatientdoctor();
             // return const DoctorSignIn();
           },
         ),
