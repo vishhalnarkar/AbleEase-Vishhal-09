@@ -1,4 +1,6 @@
+import 'package:ableeasefinale/pages/doctorPages/doctorAssignTask.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -171,7 +173,7 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
     }
 
     Future<void> fetchAndUsePatientDetails() async {
-      String? patientId = fetchedPatientId; // Replace with actual patient ID
+      // String? patientId = fetchedPatientId; // Replace with actual patient ID
 
       Map<String, dynamic>? patientDetails = await getPatientDetails();
 
@@ -256,7 +258,10 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
                 getDoctorDetails();
                 assignPatientData();
                 getPatientDetails();
-                fetchAndUsePatientDetails();
+                setState(() {
+                  fetchAndUsePatientDetails();
+                });
+
                 Navigator.of(context).pop();
               },
               child: const Text(
@@ -292,7 +297,8 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
       ),
       body: assignedPatients.isEmpty
           ? const Center(
-              child: CircularProgressIndicator()) // Show loader if no data
+              child:
+                  Text("Either Loading, or No data")) // Show loader if no data
           : ListView.builder(
               itemCount: assignedPatients.length,
               itemBuilder: (context, index) {
@@ -300,47 +306,106 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
                 return patientTile(
                   patient['Patientname'] ?? "Unknown",
                   patient['PatientUid'] ?? "Unknown",
+                  index,
                 );
               },
             ),
     );
   }
 
-  Widget patientTile(String name, String uid) {
+  Widget patientTile(String name, String uid, int index) {
     return Padding(
       padding: const EdgeInsets.only(left: 17, right: 17, top: 17),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DoctorAssignPage(
+                name: name,
+                uid: uid,
+                index: index,
               ),
-              Text(
-                "Uid: $uid",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
-              ),
-              // const SizedBox(height: 12),
-              // Text("Total Tasks Completed: $totalTasksCompleted"),
-              // Text("Total Tasks Assigned: $totalTasksAssigned"),
-            ],
+                Text(
+                  "Uid: $uid",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      removeAssignedPatient(index);
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> removeAssignedPatient(int index) async {
+    try {
+      // Reference to the doctor document in the Firestore collection
+      DocumentReference doctorDoc = FirebaseFirestore.instance
+          .collection('doctors')
+          .doc(FirebaseAuth.instance.currentUser!.uid);
+
+      // Fetch the current data from the doctor's document
+      DocumentSnapshot doctorSnapshot = await doctorDoc.get();
+
+      if (doctorSnapshot.exists) {
+        // Get the 'DoctorAssignedPatients' array from the document
+        List<dynamic> assignedPatients =
+            doctorSnapshot.get('DoctorAssignedPatients');
+
+        if (index >= 0 && index < assignedPatients.length) {
+          // Remove the patient at the given index
+          assignedPatients.removeAt(index);
+
+          // Update the 'DoctorAssignedPatients' array with the modified list
+          setState(() {
+            doctorDoc.update({
+              'DoctorAssignedPatients': assignedPatients,
+            });
+          });
+
+          print('Patient removed successfully from the assigned list.');
+        } else {
+          print('Invalid index.');
+        }
+      } else {
+        print('Doctor document not found.');
+      }
+    } catch (e) {
+      print('Error removing patient: $e');
+    }
   }
 }

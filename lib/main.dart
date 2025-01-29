@@ -1,11 +1,9 @@
-import 'package:ableeasefinale/pages/UI/homePage.dart';
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
 import 'package:ableeasefinale/pages/UI/profilePage.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorLineChart.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorProfilePage.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/UI/parentPage.dart';
-import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
