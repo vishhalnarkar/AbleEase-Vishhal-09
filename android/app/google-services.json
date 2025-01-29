@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "489622722242",
+    "project_id": "ableease-36e2d",
+    "storage_bucket": "ableease-36e2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489622722242:android:96cc50ed27c50b4e3d8d5b",
+        "android_client_info": {
+          "package_name": "com.example.ableeasefinale"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRymIYsNze9pkzED9w3_anF7HwzJWp9Uw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
