@@ -48,6 +48,7 @@ class AuthMethods {
             'username': username,
             'email': mail,
             'password': password,
+            'role': 'user',
           });
 
           res = 'success';
@@ -87,6 +88,7 @@ class AuthMethods {
             'username': username,
             'email': mail,
             'password': password,
+            'role': 'doctor'
           });
 
           res = 'success';
