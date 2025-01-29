@@ -16,13 +16,14 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 35),
-      child: DefaultTabController(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: DefaultTabController(
           length: 2,
           child: Scaffold(
             appBar: AppBar(
               leading: null,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
               bottom: const TabBar(tabs: [
                 Tab(
                   text: "Pending",
@@ -31,9 +32,14 @@ class _TaskPageState extends State<TaskPage> {
                   text: "Completed",
                 ),
               ]),
-              title: const Text(
-                "All Tasks",
-                style: TextStyle(),
+              title: const Center(
+                child: Text(
+                  "All Tasks",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                  ),
+                ),
               ),
             ),
             body: TabBarView(children: [
