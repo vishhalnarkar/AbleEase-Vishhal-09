@@ -8,16 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class DoctorSignIn extends StatefulWidget {
-  const DoctorSignIn({Key? key}) : super(key: key);
+class DoctorRegister extends StatefulWidget {
+  const DoctorRegister({Key? key}) : super(key: key);
 
   @override
-  _DoctorSignInState createState() => _DoctorSignInState();
+  _DoctorRegisterState createState() => _DoctorRegisterState();
 }
 
-class _DoctorSignInState extends State<DoctorSignIn> {
+class _DoctorRegisterState extends State<DoctorRegister> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   bool _isLoading = false;
   Uint8List? _image;
 
@@ -26,18 +27,20 @@ class _DoctorSignInState extends State<DoctorSignIn> {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _usernameController.dispose();
   }
 
-  void loginUser() async {
+  void signUpUser() async {
     // set loading to true
     setState(() {
       _isLoading = true;
     });
 
     // signup user using our authmethodds
-    String res = await AuthMethods().logInDoctor(
+    String res = await AuthMethods().signUpDoctor(
       mail: _emailController.text,
       password: _passwordController.text,
+      username: _usernameController.text,
     );
     // if string returned is sucess, user has been created
     if (res == "success") {
@@ -99,6 +102,11 @@ class _DoctorSignInState extends State<DoctorSignIn> {
                 child: Form(
                   child: Column(
                     children: [
+                      TextFieldInput(
+                          textEditingController: _usernameController,
+                          hintText: "Enter Username (max:8)",
+                          textInputType: TextInputType.text,
+                          prefixIcon: Icon(Icons.person)),
                       const SizedBox(
                         height: 15, // Decreased height between input fields
                       ),
@@ -120,7 +128,7 @@ class _DoctorSignInState extends State<DoctorSignIn> {
                         height: 20, // Decreased height between input fields
                       ),
                       InkWell(
-                        onTap: loginUser,
+                        onTap: signUpUser,
                         child: Container(
                           width: 150,
                           height: 50,
@@ -135,7 +143,7 @@ class _DoctorSignInState extends State<DoctorSignIn> {
                           ),
                           child: !_isLoading
                               ? const Text(
-                                  'Login',
+                                  'Register',
                                   style: TextStyle(
                                       fontSize: 18, color: Colors.white),
                                 )
