@@ -76,7 +76,7 @@ class RegPatientdoctor extends StatelessWidget {
                   onPressed: () {
                     // ignore: avoid_print
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const DoctorSignIn()));
+                        builder: (context) => const DetailsPage()));
                   },
                   icon: const Icon(
                     Icons.healing_outlined,

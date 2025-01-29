@@ -22,6 +22,7 @@ class _TaskPageState extends State<TaskPage> {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
+              leading: null,
               bottom: const TabBar(tabs: [
                 Tab(
                   text: "Pending",

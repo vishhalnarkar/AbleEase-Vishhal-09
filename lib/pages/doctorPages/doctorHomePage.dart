@@ -17,7 +17,7 @@ class doctorHomePage extends StatefulWidget {
 }
 
 class _doctorHomePageState extends State<doctorHomePage> {
-  String username = "Doc";
+  String username = "";
 
   List<String> quotesOfTheDays = [
     "The art of medicine consists of amusing the patient while nature cures the disease.",
@@ -153,7 +153,7 @@ class _doctorHomePageState extends State<doctorHomePage> {
 
   void getUsername() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('doctors')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
@@ -214,7 +214,7 @@ class _doctorHomePageState extends State<doctorHomePage> {
                     ),
                     Expanded(
                       child: Text(
-                        '$username',
+                        'Dr.$username',
                         style: TextStyle(
                             fontSize: 40, fontWeight: FontWeight.w400),
                         maxLines: 1,
