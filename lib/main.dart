@@ -52,13 +52,7 @@ class MyApp extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-<<<<<<< HEAD
             return const LoginPage();
-=======
-            // return const LoginPage();
-            return const TaskPage();
-            // return const DoctorSignIn();
->>>>>>> d86f534d30a88904fbc01237a4c1f943268ec679
           },
         ),
         // home: MedTest(),
