@@ -1,9 +1,6 @@
-import 'package:ableeasefinale/pages/UI/homePage.dart';
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
-import 'package:ableeasefinale/pages/doctorPages/AssignPage.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/UI/parentPage.dart';
-import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,29 +34,27 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Assignpage(),
-        //   stream: FirebaseAuth.instance.authStateChanges(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.connectionState == ConnectionState.active) {
-        //       if (snapshot.hasData) {
-        //         // return const ParentPage();
-        //         return const doctorParentPage();
-        //         // return const DoctorSignIn();
-        //       } else if (snapshot.hasError) {
-        //         return Center(
-        //           child: Text('${snapshot.error}'),
-        //         );
-        //       }
-        //     }
-        //     if (snapshot.connectionState == ConnectionState.waiting) {
-        //       return const Center(child: CircularProgressIndicator());
-        //     }
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                // return const ParentPage();
+                return const doctorParentPage();
+                // return const DoctorSignIn();
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('${snapshot.error}'),
+                );
+              }
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        //     // return const LoginPage();
-        //     return const TaskPage();
-        //     // return const DoctorSignIn();
-        //   },
-        // ),
+            return const LoginPage();
+          },
+        ),
         // home: MedTest(),
         theme: lightMode,
         darkTheme: darkMode,

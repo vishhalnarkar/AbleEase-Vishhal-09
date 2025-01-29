@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
         .get();
 
     setState(() {
-      username=(snap.data() as Map<String, dynamic>) ['username'];
+      username = (snap.data() as Map<String, dynamic>)['username'];
     });
   }
 
@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Main Home Column
-      body: Column (
+      body: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Notification Bar Padding
@@ -78,8 +78,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         '${username}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style:
-                            TextStyle(fontSize: 40, fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.w400),
                       ),
                     )
                   ],
@@ -106,72 +106,42 @@ class _ProfilePageState extends State<ProfilePage> {
           // Padding Between Name
           const SizedBox(height: 40),
 
-
-          GestureDetector (
-            child: Image(image: AssetImage('assets/images/seeInsights.png'),
-            width: 400,
-            height:300,
-            
-            ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => InsightsPage()));}
-          ),
-
-          //Bar Graphs
-          // const Center(
-          //   child: SizedBox(
-          //     height: 400,
-          //     child: MyBarChart(),
-          //   ),
-
-          // ),
-          //See insights button
-
-
+          GestureDetector(
+              child: Image(
+                image: AssetImage('assets/images/seeInsights.png'),
+                width: 400,
+                height: 300,
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => InsightsPage()));
+              }),
 
           SizedBox(
             height: 36,
           ),
 
-
           // Logout Button
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Center(
-                  child: ElevatedButton(
-                    
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.secondary
-                    ),
-                    
-                    child: Text("LOGOUT", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    onPressed: () {
-                      authMethods.signOutUser(context);
-                      setState(() {
-                        
-                      });
-                    },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary),
+                  child: Text(
+                    "LOGOUT",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
+                  onPressed: () {
+                    authMethods.signOutUser(context);
+                    setState(() {});
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-
-          SizedBox(
-            height: 25,
-          ),
-
-          // Container(
-          //   color: Theme.of(context).colorScheme.primary,
-          //   height: 200,
-          //   width: 200,
-          //   child: Column(
-          //     children: [],
-          //   ),
-          // )
         ],
       ),
     );
