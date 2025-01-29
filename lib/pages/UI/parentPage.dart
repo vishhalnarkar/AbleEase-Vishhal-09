@@ -3,6 +3,7 @@ import 'package:ableeasefinale/pages/UI/meditationPage.dart';
 import 'package:ableeasefinale/pages/UI/navigationBar.dart';
 import 'package:ableeasefinale/pages/UI/profilePage.dart';
 import 'package:ableeasefinale/pages/disability_page.dart';
+import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
@@ -30,8 +31,12 @@ class _ParentPageState extends State<ParentPage> {
         ch = const MedPage();
         break;
       case 3:
+        ch = const TaskPage();
+        break;
+      case 4:
         ch = const ProfilePage();
         break;
+
       default:
         ch = const DisabilityPage();
     }
@@ -57,6 +62,9 @@ class _ParentPageState extends State<ParentPage> {
           ),
           CurvedNavigationBarItem(
             child: Icon(CommunityMaterialIcons.meditation, size: 35),
+          ),
+          CurvedNavigationBarItem(
+            child: Icon(CommunityMaterialIcons.book_account, size: 35),
           ),
           CurvedNavigationBarItem(
             child: Icon(Icons.person, size: 35),
