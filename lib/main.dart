@@ -1,4 +1,9 @@
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
+<<<<<<< HEAD
+=======
+import 'package:ableeasefinale/pages/UI/signIn.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorPatientView.dart';
+>>>>>>> faab717d1687b865ab630cf16f2545e846c1d579
 import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/UI/parentPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
@@ -35,7 +40,34 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+<<<<<<< HEAD
         home: AuthWrapper(),
+=======
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                // return const ParentPage();
+                return const doctorParentPage();
+                // return const DoctorSignIn();
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('${snapshot.error}'),
+                );
+              }
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            // return const LoginPage();
+            return const DoctorPatientView();
+            // return const DoctorSignIn();
+          },
+        ),
+        // home: MedTest(),
+>>>>>>> faab717d1687b865ab630cf16f2545e846c1d579
         theme: lightMode,
         darkTheme: darkMode,
         themeMode: ThemeMode.dark,
