@@ -1,5 +1,6 @@
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
 import 'package:ableeasefinale/pages/UI/signIn.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorPatientView.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/tasks/taskPage.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
             }
 
             // return const LoginPage();
-            return const doctorParentPage();
+            return const DoctorPatientView();
             // return const DoctorSignIn();
           },
         ),
