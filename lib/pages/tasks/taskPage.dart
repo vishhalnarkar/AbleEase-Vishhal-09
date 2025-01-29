@@ -1,4 +1,10 @@
+import 'package:ableeasefinale/pages/games/OddOut.dart';
+import 'package:ableeasefinale/pages/games/Testris%20Game/board.dart';
+import 'package:ableeasefinale/pages/games/brickBreaker/brickHome.dart';
+import 'package:ableeasefinale/pages/games/color_game_r.dart';
+import 'package:ableeasefinale/pages/games/flappyBird/flappyPage.dart';
 import 'package:ableeasefinale/pages/games/memory_game/memory_gameR.dart';
+import 'package:ableeasefinale/pages/games/snakeGame/home_page.dart';
 import 'package:ableeasefinale/pages/instructions/instr_color_game.dart';
 import 'package:ableeasefinale/pages/instructions/instr_memory_game.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +20,50 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+  // Serever Data
+  // User tasks
+  // Game Name , Game image, assigned on
+
   @override
   Widget build(BuildContext context) {
+    int x;
+    List<String> assignedGame = [
+      "Odd Color Out",
+      "Tetris Game",
+      "Blink Test",
+      "Brick Breaker",
+      "Memory Game",
+      "Color Game",
+      "Snake Game",
+      "Flappy Bird",
+      "Eye Exercise",
+      "Snake Game",
+    ];
+
+    List<String> games = [
+      "Color Game",
+      "Memory Game",
+      "Tetris Game",
+      "Flappy Bird",
+      "Brick Breaker",
+      "Snake Game",
+      "Eye Exercise",
+      "Blink Test",
+      "Odd Color Out",
+    ];
+
+    List<String> gameImagePaths = [
+      "assets/images/colorGamePic.png",
+      "assets/images/MemoryGamePic.png",
+      "assets/images/tetris_game.png",
+      "assets/images/bird.png",
+      "assets/images/brickBreaker.png",
+      "assets/images/snake.png",
+      "assets/images/eye.png",
+      "assets/images/eyeGame.png",
+      "assets/images/OddOut.png",
+    ];
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: DefaultTabController(
@@ -44,7 +92,22 @@ class _TaskPageState extends State<TaskPage> {
             ),
             body: TabBarView(children: [
               Container(
-                color: Colors.green,
+                color: Theme.of(context).colorScheme.surface,
+                child: ListView(
+                  children: [
+                    for (int i = 0; i < games.length; i++)
+                      gameCard(
+                          gameImagePaths[games.indexOf(assignedGame[i])],
+                          games[games.indexOf(assignedGame[i])],
+                          games.indexOf(assignedGame[i]),
+                          "13/01/2025"),
+                    gameCard("assets/images/colorGamePic.png", "Color Game", 2,
+                        "13/01/2025")
+
+                    // for (int i = 0; i < games.length; i++)
+                    //   gameCard(gameImagePaths[i], games[i], i, "13/01/2025"),
+                  ],
+                ),
               ),
               Container(
                 color: Colors.yellow,
@@ -52,22 +115,13 @@ class _TaskPageState extends State<TaskPage> {
             ]),
           )),
     );
-    //         gameCard("assets/images/eye.png", "Eye Exercise", "Level 1", 0,
-    //             "EST: 30 sec"),
-    //         gameCard("assets/images/eyeGame.png", "Blink Test    ", "Level 2", 1,
-    //             "EST: 1 mins"),
-    //         gameCard("assets/images/eyeGame.png", "Odd Color out", "Level 3", 2,
-    //             "EST: 1 mins"),
-    //       ],
-    //     ),
-    //   );
   }
 
-  Widget gameCard(String imgPath, String gName, String lvl, int pgSelector,
-      String estTime) {
+  Widget gameCard(
+      String imgPath, String gName, int pgSelector, String assignedDate) {
     return Container(
-      height: 200,
-      margin: const EdgeInsets.only(top: 45, left: 35, right: 35),
+      height: 203,
+      margin: const EdgeInsets.only(top: 25, left: 20, right: 20),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(15),
@@ -75,71 +129,71 @@ class _TaskPageState extends State<TaskPage> {
           BoxShadow(
             color: Color.fromARGB(63, 0, 0, 0),
             blurRadius: 4.0,
-            spreadRadius: -5.0,
+            spreadRadius: -2.0,
             offset: Offset(0.0, 8.0),
           )
         ],
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30, left: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 110,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
                       gName,
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontSize: 22),
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    Text(
-                      lvl,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondary,
-                          fontSize: 13),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 50, top: 15, right: 15, bottom: 15),
-                  child: Container(
-                    height: 115,
-                    width: 200,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Image.asset(imgPath, fit: BoxFit.cover),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Divider(
-            height: 5,
-            color: Theme.of(context).colorScheme.onSecondary,
-          ),
-          Row(
-            children: [
-              const SizedBox(width: 30), // Ensures proper alignment
-              ElevatedButton(
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    color: Colors.white,
+                    child: Image.asset(
+                      imgPath,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Divider(
+              height: 5,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
+            Row(
+              children: [
+                ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
-                    backgroundColor: Theme.of(context).colorScheme.background,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => switch (pgSelector) {
-                          0 => const EyeExercise(),
-                          1 => const EyeBlink(),
-                          2 => const EyeBlink(),
-                          // TODO: Handle this case.
+                          0 => const ColorGameR(), // Color Game
+                          1 => const MemoryGame(), // Memory Game
+                          2 => const GameBoard(), // Tetris Game
+                          3 => const FlappyPage(), // Flappy Bird
+                          4 => const BrickHome(), // Brick Breaker
+                          5 => const SnakeGame(), // Snake Game
+                          6 => const EyeExercise(), // Eye Exercise
+                          7 => const EyeBlink(), // Blink Test
+                          8 => const Oddout(), // Odd Color Out
                           int() => throw UnimplementedError(),
                         },
                       ),
@@ -147,31 +201,38 @@ class _TaskPageState extends State<TaskPage> {
                   },
                   child: Row(
                     children: [
-                      Text("Start",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontSize: 18,
-                          )),
+                      Text(
+                        "Start",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(width: 5),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: Theme.of(context).colorScheme.secondary,
-                        size: 18,
+                        size: 16,
                       )
                     ],
-                  )),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: Text(
-                  estTime,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary),
+                  ),
                 ),
-              )
-            ],
-          ),
-        ],
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Text(
+                    assignedDate,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
