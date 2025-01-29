@@ -44,10 +44,10 @@ class AuthMethods {
 
           // Add user
           await _firestore.collection('users').doc(cred.user!.uid).set({
-            'userId': cred.user!.uid,
-            'username': username,
-            'email': mail,
-            'password': password,
+            'PatientId': cred.user!.uid,
+            'PatientName': username,
+            'PatientEmail': mail,
+            'PatientPassword': password,
             'role': 'user',
           });
 
@@ -84,10 +84,10 @@ class AuthMethods {
 
           // Add user
           await _firestore.collection('doctors').doc(cred.user!.uid).set({
-            'userId': cred.user!.uid,
-            'username': username,
-            'email': mail,
-            'password': password,
+            'DoctorId': cred.user!.uid,
+            'DoctorName': username,
+            'DoctorEmail': mail,
+            'DoctorPassword': password,
             'role': 'doctor'
           });
 
