@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:ableeasefinale/pages/UI/homePage.dart';
 import 'package:ableeasefinale/pages/UI/parentPage.dart';
 import 'package:ableeasefinale/pages/UI/text_field_input.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/resources/auth_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -47,7 +48,7 @@ class _DoctorSignInState extends State<DoctorSignIn> {
       // navigate to the home screen
       if (context.mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const ParentPage()),
+          MaterialPageRoute(builder: (context) => const doctorParentPage()),
         );
       }
     } else {

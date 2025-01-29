@@ -1,6 +1,4 @@
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
-import 'package:ableeasefinale/pages/UI/signIn.dart';
-import 'package:ableeasefinale/pages/doctorPages/doctorPatientView.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorparentPage.dart';
 import 'package:ableeasefinale/pages/UI/parentPage.dart';
 import 'package:ableeasefinale/pages/tasks/taskPage.dart';
@@ -15,13 +13,12 @@ import 'theme/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyDRymIYsNze9pkzED9w3_anF7HwzJWp9Uw',
-      appId: '1:489622722242:android:96cc50ed27c50b4e3d8d5b',
-      messagingSenderId: '489622722242',
-      projectId: 'ableease-36e2d',
-    ),
-  );
+      options: const FirebaseOptions(
+    apiKey: 'AIzaSyDRymIYsNze9pkzED9w3_anF7HwzJWp9Uw',
+    appId: '1:489622722242:android:96cc50ed27c50b4e3d8d5b',
+    messagingSenderId: '489622722242',
+    projectId: 'ableease-36e2d',
+  ));
   runApp(const MyApp());
 }
 
@@ -34,7 +31,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => UserProvider(),
-        ),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -57,7 +54,7 @@ class MyApp extends StatelessWidget {
             }
 
             // return const LoginPage();
-            return TaskPage();
+            return const TaskPage();
             // return const DoctorSignIn();
           },
         ),
@@ -66,54 +63,6 @@ class MyApp extends StatelessWidget {
         darkTheme: darkMode,
         themeMode: ThemeMode.dark,
       ),
-    );
-  }
-}
-
-class AuthWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          if (snapshot.hasData) {
-            // User is logged in, fetch their role
-            return FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(snapshot.data!.uid)
-                  .get(),
-              builder: (context, userSnapshot) {
-                if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                  final userRole =
-                      userSnapshot.data!['role']; // Fetch role from Firestore
-                  if (userRole == 'doctor') {
-                    return const doctorParentPage();
-                  } else if (userRole == 'user') {
-                    return const ParentPage();
-                  }
-                }
-                // If role is not found or invalid, log out the user
-                FirebaseAuth.instance.signOut();
-                return const LoginPage();
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          }
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        // User is not logged in, show login page
-        return const LoginPage();
-      },
     );
   }
 }

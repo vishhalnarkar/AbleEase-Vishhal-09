@@ -12,12 +12,9 @@ class InsightsPage extends StatefulWidget {
 }
 
 class _InsightsPageState extends State<InsightsPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         leading: IconButton(
@@ -30,8 +27,6 @@ class _InsightsPageState extends State<InsightsPage> {
         elevation: 0,
         title: Text("See Insights"),
       ),
-
-
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -47,13 +42,17 @@ class _InsightsPageState extends State<InsightsPage> {
                         width: 500,
                         child: MyBarChart(),
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
                         height: 300,
                         width: 500,
                         child: payingChart(),
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
                         height: 300,
                         width: 500,
