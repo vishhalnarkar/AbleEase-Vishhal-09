@@ -19,9 +19,29 @@ class AuthMethods {
     User currentUser = _auth.currentUser!;
 
     DocumentSnapshot snap =
-        await _firestore.collection('users').doc(currentUser.uid).get();
+        await _firestore.collection('patient').doc(currentUser.uid).get();
 
     return model.User.fromSnap(snap);
+  }
+
+  Future<int> getTotalPatients() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('totalPatient')
+          .doc('8G2euRnrVWto6WVPHEvF')
+          .get();
+
+      if (snapshot.exists && snapshot.data() != null) {
+        var data = snapshot.data() as Map<String, dynamic>;
+        int total = data['TotalPatientInDb'];
+        print(total);
+        print("Now returning");
+        return total; // Default to 0 if field is missing
+      }
+    } catch (error) {
+      print('Error fetching total patients: $error');
+    }
+    return 0; // Return 0 in case of an error
   }
 
   //Sign up user
@@ -31,7 +51,12 @@ class AuthMethods {
     required String username,
   }) async {
     String res = "Some error Occurred";
+    int totalPatients = await getTotalPatients();
+    totalPatients = totalPatients + 1;
 
+    //Get Total patients
+    print("Total Patients done :$totalPatients");
+    print("Going inside create user function");
     try {
       // Check if email, password, and username are not empty
       if (mail.isNotEmpty || password.isNotEmpty || username.isNotEmpty) {
@@ -40,17 +65,26 @@ class AuthMethods {
           UserCredential cred = await _auth.createUserWithEmailAndPassword(
               email: mail, password: password);
 
-          model.User user = model.User(mail: mail, username: username);
+          print("User Created");
+          // model.User user = model.User(mail: mail, username: username);
 
           // Add user
-          await _firestore.collection('users').doc(cred.user!.uid).set({
+          await _firestore.collection('patient').doc(cred.user!.uid).set({
+            'PatientUid': 'P_$totalPatients',
             'PatientId': cred.user!.uid,
             'PatientName': username,
             'PatientEmail': mail,
             'PatientPassword': password,
-            'role': 'user',
+            'role': 'patient',
           });
 
+          await FirebaseFirestore.instance
+              .collection('totalPatient')
+              .doc(
+                  '8G2euRnrVWto6WVPHEvF') // Replace 'uid' with the actual document ID
+              .update({
+            'TotalPatientInDb': FieldValue.increment(1),
+          });
           res = 'success';
         } else {
           res = 'Username must be less than 8 characters';
