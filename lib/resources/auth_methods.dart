@@ -15,52 +15,89 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<model.User> getUserDetails() async{
+  Future<model.User> getUserDetails() async {
     User currentUser = _auth.currentUser!;
 
-    DocumentSnapshot snap=await _firestore.collection('users').doc(currentUser.uid).get();
+    DocumentSnapshot snap =
+        await _firestore.collection('users').doc(currentUser.uid).get();
 
     return model.User.fromSnap(snap);
   }
 
   //Sign up user
   Future<String> signUpUser({
-  required String mail,
-  required String password,
-  required String username,
-}) async {
-  String res = "Some error Occurred";
+    required String mail,
+    required String password,
+    required String username,
+  }) async {
+    String res = "Some error Occurred";
 
-  try {
-    // Check if email, password, and username are not empty
-    if (mail.isNotEmpty || password.isNotEmpty || username.isNotEmpty) {
-      // Check if username length is less than 8 characters
-      if (username.length < 9) {
-        UserCredential cred = await _auth.createUserWithEmailAndPassword(
-          email: mail, password: password);
+    try {
+      // Check if email, password, and username are not empty
+      if (mail.isNotEmpty || password.isNotEmpty || username.isNotEmpty) {
+        // Check if username length is less than 8 characters
+        if (username.length < 9) {
+          UserCredential cred = await _auth.createUserWithEmailAndPassword(
+              email: mail, password: password);
 
-        model.User user = model.User(
-          mail: mail, 
-          username: username
-        );
+          model.User user = model.User(mail: mail, username: username);
 
-        // Add user
-        await _firestore.collection('users').doc(cred.user!.uid).set(user.toJson());
+          // Add user
+          await _firestore
+              .collection('users')
+              .doc(cred.user!.uid)
+              .set(user.toJson());
 
-        res = 'success';
+          res = 'success';
+        } else {
+          res = 'Username must be less than 8 characters';
+        }
       } else {
-        res = 'Username must be less than 8 characters';
+        res = 'Please enter all the fields';
       }
-    } else {
-      res = 'Please enter all the fields';
+    } catch (err) {
+      res = err.toString();
     }
-  } catch (err) {
-    res = err.toString();
+
+    return res;
   }
 
-  return res;
-}
+  Future<String> signUpDoctor({
+    required String mail,
+    required String password,
+    required String username,
+  }) async {
+    String res = "Some error Occurred";
 
+    try {
+      // Check if email, password, and username are not empty
+      if (mail.isNotEmpty || password.isNotEmpty || username.isNotEmpty) {
+        // Check if username length is less than 8 characters
+        if (username.length < 9) {
+          UserCredential cred = await _auth.createUserWithEmailAndPassword(
+              email: mail, password: password);
+
+          model.User user = model.User(mail: mail, username: username);
+
+          // Add user
+          await _firestore
+              .collection('doctors')
+              .doc(cred.user!.uid)
+              .set(user.toJson());
+
+          res = 'success';
+        } else {
+          res = 'Username must be less than 8 characters';
+        }
+      } else {
+        res = 'Please enter all the fields';
+      }
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
 
   //Log in user
   Future<String> logInUser({
@@ -68,8 +105,6 @@ class AuthMethods {
     required String password,
   }) async {
     String res = "Some error occured";
-
-    
 
     try {
       if (mail.isNotEmpty || password.isNotEmpty) {
@@ -85,7 +120,27 @@ class AuthMethods {
     return res;
   }
 
-  void signOutUser(BuildContext context){
+  Future<String> logInDoctor({
+    required String mail,
+    required String password,
+  }) async {
+    String res = "Some error occured";
+
+    try {
+      if (mail.isNotEmpty || password.isNotEmpty) {
+        await _auth.signInWithEmailAndPassword(email: mail, password: password);
+        res = "success";
+      } else {
+        res = "Please enter all the fields";
+      }
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
+  void signOutUser(BuildContext context) {
     FirebaseAuth.instance.signOut();
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => LoginPage()),

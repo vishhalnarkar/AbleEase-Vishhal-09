@@ -1,4 +1,5 @@
 import 'package:ableeasefinale/pages/RegisterPatientDoctor.dart';
+import 'package:ableeasefinale/pages/SignInPatientDoctor.dart';
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
 import 'package:ableeasefinale/pages/UI/signIn.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorSignIn.dart';
@@ -42,7 +43,8 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
                 // return const ParentPage();
-                return const RegPatientdoctor();
+                return const LoginPage();
+                // return const SigninPatientdoctor();
                 // return const DoctorSignIn();
               } else if (snapshot.hasError) {
                 return Center(

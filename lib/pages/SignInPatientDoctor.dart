@@ -1,12 +1,11 @@
 import 'package:ableeasefinale/pages/UI/detailsPage.dart';
 import 'package:ableeasefinale/pages/UI/loginScreen.dart';
-import 'package:ableeasefinale/pages/doctorPages/doctorRegister.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorSignIn.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class RegPatientdoctor extends StatelessWidget {
-  const RegPatientdoctor({super.key});
+class SigninPatientdoctor extends StatelessWidget {
+  const SigninPatientdoctor({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class RegPatientdoctor extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Register",
+                "Sign in",
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w400,
@@ -50,7 +49,7 @@ class RegPatientdoctor extends StatelessWidget {
                   onPressed: () {
                     // ignore: avoid_print
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const DoctorRegister()));
+                        builder: (context) => const DoctorSignIn()));
                   },
                   icon: const Icon(
                     Icons.medical_services_outlined,
@@ -58,7 +57,7 @@ class RegPatientdoctor extends StatelessWidget {
                     // size: 50,
                   ),
                   label: const Text(
-                    "Register as Doctor",
+                    "Sign in as Doctor",
                     style: TextStyle(color: Colors.black),
                   ),
                   style: const ButtonStyle(
@@ -76,7 +75,7 @@ class RegPatientdoctor extends StatelessWidget {
                   onPressed: () {
                     // ignore: avoid_print
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const DoctorSignIn()));
+                        builder: (context) => const LoginScreen()));
                   },
                   icon: const Icon(
                     Icons.healing_outlined,
@@ -84,7 +83,7 @@ class RegPatientdoctor extends StatelessWidget {
                     color: Colors.black,
                   ),
                   label: const Text(
-                    "Register as Patient",
+                    "sign in as Patient",
                     style: TextStyle(color: Colors.black),
                   ),
                   style: const ButtonStyle(

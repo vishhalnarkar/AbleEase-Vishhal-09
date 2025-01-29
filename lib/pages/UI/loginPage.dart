@@ -1,3 +1,5 @@
+import 'package:ableeasefinale/pages/RegisterPatientDoctor.dart';
+import 'package:ableeasefinale/pages/SignInPatientDoctor.dart';
 import 'package:ableeasefinale/pages/UI/detailsPage.dart';
 import 'package:ableeasefinale/pages/UI/loginScreen.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +40,7 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     // ignore: avoid_print
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const DetailsPage()));
+                        builder: (context) => const RegPatientdoctor()));
                   },
                   icon: const Icon(
                     FontAwesomeIcons.google,
@@ -64,7 +66,7 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     // ignore: avoid_print
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+                        builder: (context) => const SigninPatientdoctor()));
                   },
                   icon: const Icon(
                     Icons.person,
