@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
             }
 
             // return const LoginPage();
-            return const DoctorPatientView();
+            return const TaskPage();
             // return const DoctorSignIn();
           },
         ),
