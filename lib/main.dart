@@ -1,5 +1,8 @@
+import 'package:ableeasefinale/pages/RegisterPatientDoctor.dart';
+import 'package:ableeasefinale/pages/SignInPatientDoctor.dart';
 import 'package:ableeasefinale/pages/UI/loginPage.dart';
 import 'package:ableeasefinale/pages/UI/signIn.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorSignIn.dart';
 import 'package:ableeasefinale/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,7 +42,10 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
-                return const ParentPage();
+                // return const ParentPage();
+                return const LoginPage();
+                // return const SigninPatientdoctor();
+                // return const DoctorSignIn();
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text('${snapshot.error}'),
@@ -50,7 +56,9 @@ class MyApp extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            return const LoginPage();
+            // return const LoginPage();
+            return const RegPatientdoctor();
+            // return const DoctorSignIn();
           },
         ),
         // home: MedTest(),

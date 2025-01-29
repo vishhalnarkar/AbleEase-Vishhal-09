@@ -1,16 +1,26 @@
-import 'package:ableeasefinale/pages/RegisterPatientDoctor.dart';
-import 'package:ableeasefinale/pages/SignInPatientDoctor.dart';
 import 'package:ableeasefinale/pages/UI/detailsPage.dart';
 import 'package:ableeasefinale/pages/UI/loginScreen.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorRegister.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorSignIn.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegPatientdoctor extends StatelessWidget {
+  const RegPatientdoctor({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        elevation: 0,
+      ),
       body: Center(
         child: Container(
           width: 325,
@@ -23,7 +33,7 @@ class LoginPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "WELCOME",
+                "Register",
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w400,
@@ -40,15 +50,15 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     // ignore: avoid_print
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const RegPatientdoctor()));
+                        builder: (context) => const DoctorRegister()));
                   },
                   icon: const Icon(
-                    FontAwesomeIcons.google,
+                    Icons.medical_services_outlined,
                     color: Colors.black,
                     // size: 50,
                   ),
                   label: const Text(
-                    "Register",
+                    "Register as Doctor",
                     style: TextStyle(color: Colors.black),
                   ),
                   style: const ButtonStyle(
@@ -66,15 +76,15 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     // ignore: avoid_print
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SigninPatientdoctor()));
+                        builder: (context) => const DoctorSignIn()));
                   },
                   icon: const Icon(
-                    Icons.person,
+                    Icons.healing_outlined,
                     size: 37,
                     color: Colors.black,
                   ),
                   label: const Text(
-                    "Login",
+                    "Register as Patient",
                     style: TextStyle(color: Colors.black),
                   ),
                   style: const ButtonStyle(

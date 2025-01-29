@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // buildscript {
 //     ext.kotlin_version = '1.9.0'
 //     repositories {
@@ -34,6 +35,9 @@
 //     delete rootProject.buildDir
 // }
 buildscript {
+=======
+buildscript{
+>>>>>>> bda79a4a91ff243205992edbd2acf4b3f20e53ab
     ext.kotlin_version = '1.9.0'
     repositories {
         google()
