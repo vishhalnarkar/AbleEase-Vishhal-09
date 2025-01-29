@@ -4,6 +4,7 @@ import 'package:ableeasefinale/pages/UI/navigationBar.dart';
 import 'package:ableeasefinale/pages/UI/profilePage.dart';
 import 'package:ableeasefinale/pages/disability_page.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorHomePage.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorPatientView.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
@@ -25,7 +26,7 @@ class DoctorParentPageState extends State<doctorParentPage> {
         ch = const doctorHomePage();
         break;
       case 1:
-        ch = const DisabilityPage();
+        ch = const DoctorPatientView();
         break;
       case 2:
         ch = const MedPage();
