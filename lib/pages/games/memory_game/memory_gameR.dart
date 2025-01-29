@@ -35,7 +35,6 @@ class Game {
   ];
   final int cardCount = 8;
   List<Map<int, String>> matchCheck = [];
-  
 
   //methods
   void initGame() {
@@ -46,7 +45,6 @@ class Game {
 
 class MemoryGame extends StatelessWidget {
   const MemoryGame({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextStyle whiteText = TextStyle(color: Colors.white);
   bool hideTest = false;
   Game _game = Game();
-  var scoreMethods= ScoreMethods();
+  var scoreMethods = ScoreMethods();
 
   //game stats
   int tries = 0;
@@ -95,12 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showGameOverDialog() async {
     _gameTimer.cancel();
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Game Over",),
+          title: Text(
+            "Game Over",
+          ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -123,14 +123,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.of(context).pop(); // Close the dialog
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text("Go Back",style: TextStyle(color: Colors.black)),
+              child: Text("Go Back", style: TextStyle(color: Colors.black)),
             ),
           ],
         );
       },
     );
-    scoreMethods.addUserScores( score: score,tries: tries ,gameCategory: 'remembering', gameName: 'memory_game');
-    scoreMethods.updatePreviousGame("Memory Game", 'assets/images/MemoryGamePic.png');
+    scoreMethods.addUserScores(
+        score: score,
+        tries: tries,
+        gameCategory: 'remembering',
+        gameName: 'memory_game');
+    scoreMethods.updatePreviousGame(
+        "Memory Game", 'assets/images/MemoryGamePic.png');
   }
 
   // Add this method to restart the game
