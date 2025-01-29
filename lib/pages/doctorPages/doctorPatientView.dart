@@ -11,6 +11,7 @@ class DoctorPatientView extends StatefulWidget {
 class _DoctorPatientViewState extends State<DoctorPatientView> {
   List<String> allPatients = []; // Store all patient names
   List<String> filteredPatients = []; // Filtered list for search
+  bool isDropdownVisible = false; // Toggle for dropdown visibility
 
   @override
   void initState() {
@@ -68,6 +69,8 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
             .where((patient) =>
                 patient.toLowerCase().contains(query.toLowerCase()))
             .toList();
+        isDropdownVisible =
+            filteredPatients.isNotEmpty; // Show dropdown if matches found
       });
     }
 
@@ -79,82 +82,92 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
           backgroundColor: Theme.of(context).colorScheme.surface,
           content: StatefulBuilder(
             builder: (context, setDialogState) {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Search Field
-                    TextField(
-                      controller: nameController,
-                      onChanged: (value) {
-                        setDialogState(() {
-                          filterSearchResults(value);
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Search Patient',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(),
-                      ),
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Search Field
+                  TextField(
+                    controller: nameController,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        filterSearchResults(value);
+                      });
+                    },
+                    onTap: () {
+                      setDialogState(() {
+                        isDropdownVisible = true;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Search Patient',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(),
                     ),
+                  ),
 
-                    // Dropdown Button for suggestions
-                    if (filteredPatients.isNotEmpty)
-                      DropdownButton<String>(
-                        value: selectedPatient,
-                        isExpanded: true,
-                        underline: Container(),
-                        hint: const Text("Select Patient"),
-                        items: filteredPatients.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
+                  const SizedBox(height: 8),
+
+                  // Dropdown list of suggested names
+                  if (isDropdownVisible)
+                    Container(
+                      height: 150, // Limit the height of the dropdown
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListView.builder(
+                        itemCount: filteredPatients.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(filteredPatients[index]),
+                            onTap: () async {
+                              nameController.text = filteredPatients[index];
+                              setDialogState(() {
+                                isDropdownVisible = false; // Hide dropdown
+                              });
+
+                              // Fetch and autofill patient details
+                              Map<String, dynamic>? patientData =
+                                  await getPatientDetails(
+                                      filteredPatients[index]);
+                              if (patientData != null) {
+                                setDialogState(() {
+                                  ageController.text =
+                                      patientData['age'].toString();
+                                  diagnosisController.text =
+                                      patientData['diagnosis'];
+                                });
+                              }
+                            },
                           );
-                        }).toList(),
-                        onChanged: (String? newValue) async {
-                          setDialogState(() {
-                            selectedPatient = newValue;
-                            nameController.text = newValue!;
-                          });
-
-                          // Fetch and autofill patient details
-                          Map<String, dynamic>? patientData =
-                              await getPatientDetails(newValue!);
-                          if (patientData != null) {
-                            setDialogState(() {
-                              ageController.text =
-                                  patientData['age'].toString();
-                              diagnosisController.text =
-                                  patientData['diagnosis'];
-                            });
-                          }
                         },
                       ),
-
-                    const SizedBox(height: 10),
-
-                    // Age Field
-                    TextField(
-                      controller: ageController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Age',
-                        border: OutlineInputBorder(),
-                      ),
                     ),
 
-                    const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                    // Diagnosis Field
-                    TextField(
-                      controller: diagnosisController,
-                      decoration: const InputDecoration(
-                        labelText: 'Diagnosis',
-                        border: OutlineInputBorder(),
-                      ),
+                  // Age Field
+                  TextField(
+                    controller: ageController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Age',
+                      border: OutlineInputBorder(),
                     ),
-                  ],
-                ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Diagnosis Field
+                  TextField(
+                    controller: diagnosisController,
+                    decoration: const InputDecoration(
+                      labelText: 'Diagnosis',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -230,7 +243,7 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
                 ),
               ),
               Text(
-                "$diagnosis",
+                diagnosis,
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).colorScheme.onPrimary,
