@@ -24,18 +24,16 @@ class _HomePageState extends State<HomePage> {
 
   void getUsername() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('patient')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
     setState(() {
-      username = (snap.data() as Map<String, dynamic>)['username'];
+      username = (snap.data() as Map<String, dynamic>)['PatientName'];
       // username=username.substring(8,);
       // username=username.trim();
     });
   }
-
-
 
   String getGreetings() {
     DateTime now = DateTime.now();

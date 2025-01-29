@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,8 +11,6 @@ class DoctorPatientView extends StatefulWidget {
 
 class _DoctorPatientViewState extends State<DoctorPatientView> {
   List<String> allPatients = []; // Store all patient names
-  List<String> filteredPatients = []; // Filtered list for search
-  bool isDropdownVisible = false; // Toggle for dropdown visibility
 
   @override
   void initState() {
@@ -23,14 +22,32 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
   Future<void> fetchPatientNames() async {
     try {
       QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('patients').get();
+          await FirebaseFirestore.instance.collection('patient').get();
       setState(() {
         allPatients =
-            snapshot.docs.map((doc) => doc['name'].toString()).toList();
-        filteredPatients = allPatients; // Initialize filtered list
+            snapshot.docs.map((doc) => doc['PatientName'].toString()).toList();
       });
     } catch (e) {
       debugPrint('Error fetching patient names: $e');
+    }
+  }
+
+  Future<void> assignData() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('patient')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set(
+              {
+            'AssignedDoctorName': 'John Doe',
+            'AssignedDoctorId': 25,
+          },
+              SetOptions(
+                  merge:
+                      true)); // Merges with existing data instead of overwriting
+      print("Data assigned successfully");
+    } catch (e) {
+      print("Error assigning data: $e");
     }
   }
 
@@ -38,41 +55,19 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
   Future<Map<String, dynamic>?> getPatientDetails(String name) async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('patients')
-          .where('name', isEqualTo: name)
+          .collection('patient')
+          .where('PatientName', isEqualTo: name)
           .limit(1)
           .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        var doc = snapshot.docs.first;
-        return {
-          'age': doc['age'],
-          'diagnosis': doc['diagnosis'],
-        };
-      }
     } catch (e) {
       debugPrint('Error fetching patient details: $e');
     }
     return null;
   }
 
-  /// Show Patient Form with integrated search field
+  /// Show Patient Form with dropdown
   void showPatientForm(BuildContext context) {
-    final nameController = TextEditingController();
-    final ageController = TextEditingController();
-    final diagnosisController = TextEditingController();
     String? selectedPatient;
-
-    void filterSearchResults(String query) {
-      setState(() {
-        filteredPatients = allPatients
-            .where((patient) =>
-                patient.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-        isDropdownVisible =
-            filteredPatients.isNotEmpty; // Show dropdown if matches found
-      });
-    }
 
     showDialog(
       context: context,
@@ -85,88 +80,28 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Search Field
-                  TextField(
-                    controller: nameController,
-                    onChanged: (value) {
+                  // Dropdown Menu
+                  DropdownButtonFormField<String>(
+                    value: selectedPatient, // Default value
+                    hint: const Text("Select a patient"),
+                    items: allPatients.map((patient) {
+                      return DropdownMenuItem<String>(
+                        value: patient,
+                        child: Text(patient),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) async {
                       setDialogState(() {
-                        filterSearchResults(value);
-                      });
-                    },
-                    onTap: () {
-                      setDialogState(() {
-                        isDropdownVisible = true;
+                        selectedPatient = newValue;
                       });
                     },
                     decoration: InputDecoration(
-                      labelText: 'Search Patient',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Dropdown list of suggested names
-                  if (isDropdownVisible)
-                    Container(
-                      height: 150, // Limit the height of the dropdown
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListView.builder(
-                        itemCount: filteredPatients.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(filteredPatients[index]),
-                            onTap: () async {
-                              nameController.text = filteredPatients[index];
-                              setDialogState(() {
-                                isDropdownVisible = false; // Hide dropdown
-                              });
-
-                              // Fetch and autofill patient details
-                              Map<String, dynamic>? patientData =
-                                  await getPatientDetails(
-                                      filteredPatients[index]);
-                              if (patientData != null) {
-                                setDialogState(() {
-                                  ageController.text =
-                                      patientData['age'].toString();
-                                  diagnosisController.text =
-                                      patientData['diagnosis'];
-                                });
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-
-                  const SizedBox(height: 10),
-
-                  // Age Field
-                  TextField(
-                    controller: ageController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Age',
+                      labelText: 'Patient Name',
                       border: OutlineInputBorder(),
                     ),
                   ),
 
                   const SizedBox(height: 10),
-
-                  // Diagnosis Field
-                  TextField(
-                    controller: diagnosisController,
-                    decoration: const InputDecoration(
-                      labelText: 'Diagnosis',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
                 ],
               );
             },
@@ -179,8 +114,6 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                debugPrint(
-                    'Name: ${nameController.text}, Age: ${ageController.text}, Diagnosis: ${diagnosisController.text}');
               },
               child: const Text('OK'),
             ),
