@@ -11,11 +11,35 @@ class DoctorPatientView extends StatefulWidget {
 
 class _DoctorPatientViewState extends State<DoctorPatientView> {
   List<String> allPatients = []; // Store all patient names
+  String? fetchedPatientId; // Nullable string
+  List<Map<String, dynamic>> assignedPatients = []; // Store assigned patients
+  Future<void> fetchAssignedPatients() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('doctors')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (snapshot.exists) {
+        List<dynamic>? patients = snapshot['DoctorAssignedPatients'];
+
+        if (patients != null) {
+          print("Patients is not null");
+          setState(() {
+            assignedPatients = List<Map<String, dynamic>>.from(patients);
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching assigned patients: $e");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     fetchPatientNames();
+    fetchAssignedPatients();
   }
 
   /// Fetch all patient names from Firestore
@@ -32,24 +56,7 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
     }
   }
 
-  Future<void> assignData() async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('patient')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set(
-              {
-            'AssignedDoctorName': 'John Doe',
-            'AssignedDoctorId': 25,
-          },
-              SetOptions(
-                  merge:
-                      true)); // Merges with existing data instead of overwriting
-      print("Data assigned successfully");
-    } catch (e) {
-      print("Error assigning data: $e");
-    }
-  }
+// FirebaseAuth.instance.currentUser!.uid
 
   /// Fetch patient details based on selected name
   Future<Map<String, dynamic>?> getPatientDetails(String name) async {
@@ -59,6 +66,7 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
           .where('PatientName', isEqualTo: name)
           .limit(1)
           .get();
+      print("Got here somehow");
     } catch (e) {
       debugPrint('Error fetching patient details: $e');
     }
@@ -68,6 +76,131 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
   /// Show Patient Form with dropdown
   void showPatientForm(BuildContext context) {
     String? selectedPatient;
+
+    Future<String?> getPatientId() async {
+      try {
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('patient')
+            .where('PatientName', isEqualTo: selectedPatient)
+            .limit(1)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          return snapshot.docs.first.id; // Get the document ID
+        } else {
+          debugPrint("Patient not found");
+          return null;
+        }
+      } catch (e) {
+        debugPrint("Error getting patient ID: $e");
+        return null;
+      }
+    }
+
+    Future<void> fetchPatientId() async {
+      fetchedPatientId = await getPatientId();
+      print("Fetched Patient ID: $fetchedPatientId");
+    }
+
+    Future<Map<String, String>?> getDoctorDetails() async {
+      try {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('doctors')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+        if (snapshot.exists && snapshot.data() != null) {
+          var data = snapshot.data() as Map<String, dynamic>;
+          return {
+            'id': snapshot.id, // Document ID
+            'name':
+                data['DoctorName'] ?? 'Unknown' // Doctor's Name from Firestore
+          };
+        } else {
+          debugPrint("Doctor not found");
+          return null;
+        }
+      } catch (e) {
+        debugPrint("Error getting doctor details: $e");
+        return null;
+      }
+    }
+
+    Future<void> assignPatientData() async {
+      Map<String, String>? doctorDetails = await getDoctorDetails();
+      try {
+        await FirebaseFirestore.instance
+            .collection('patient')
+            .doc(fetchedPatientId)
+            .set(
+                {
+              'AssignedDoctorName': doctorDetails?['name'],
+              'AssignedDoctorId': doctorDetails?['id'],
+            },
+                SetOptions(
+                    merge:
+                        true)); // Merges with existing data instead of overwriting
+        print("Data assigned successfully");
+      } catch (e) {
+        print("Error assigning data: $e");
+      }
+    }
+
+    Future<Map<String, dynamic>?> getPatientDetails() async {
+      try {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('patient') // Firestore collection
+            .doc(fetchedPatientId) // Specific patient's document ID
+            .get();
+
+        if (snapshot.exists && snapshot.data() != null) {
+          var data = snapshot.data() as Map<String, dynamic>;
+          return {
+            // Firestore Document ID
+            'name': data['PatientName'] ?? '', // Patient's Name
+            'PatientUid': data['PatientUid'] ?? '', // Patient's Name
+          };
+        } else {
+          debugPrint("Patient not found");
+          return null;
+        }
+      } catch (e) {
+        debugPrint("Error getting patient details: $e");
+        return null;
+      }
+    }
+
+    Future<void> fetchAndUsePatientDetails() async {
+      String? patientId = fetchedPatientId; // Replace with actual patient ID
+
+      Map<String, dynamic>? patientDetails = await getPatientDetails();
+
+      if (patientDetails != null) {
+        print("Patient Details: $patientDetails");
+
+        try {
+          await FirebaseFirestore.instance
+              .collection('doctors')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .set(
+                  {
+                'DoctorAssignedPatients': FieldValue.arrayUnion([
+                  {
+                    'Patientname': patientDetails['name'],
+                    'PatientUid': patientDetails['PatientUid'],
+                    'PatientId': fetchedPatientId,
+                  }
+                ])
+              },
+                  SetOptions(
+                      merge:
+                          true)); // Merges with existing data instead of overwriting
+          print("Data assigned successfully");
+        } catch (e) {
+          print("Error assigning data: $e");
+        }
+      }
+    }
 
     showDialog(
       context: context,
@@ -92,7 +225,10 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
                     }).toList(),
                     onChanged: (String? newValue) async {
                       setDialogState(() {
+                        print("Now init patient Id");
                         selectedPatient = newValue;
+                        fetchPatientId();
+                        print(fetchedPatientId);
                       });
                     },
                     decoration: InputDecoration(
@@ -109,13 +245,24 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Color(0xffEA3EF7)),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
+                getPatientId();
+                getDoctorDetails();
+                assignPatientData();
+                getPatientDetails();
+                fetchAndUsePatientDetails();
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Color(0xffEA3EF7)),
+              ),
             ),
           ],
         );
@@ -128,17 +275,10 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
+        leading: null,
         title: const Text('Patient View'),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),
-      body: ListView(children: [
-        patientTile("Patient 1", "ADHD", 12, 13),
-        patientTile("Patient 2", "Autism", 10, 15),
-        patientTile("Patient 3", "Down Syndrome", 8, 10),
-        patientTile("Patient 4", "Cerebral Palsy", 5, 8),
-        patientTile("Patient 5", "Dyslexia", 3, 5),
-        patientTile("Patient 6", "Diagnosis", 2, 4),
-      ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).colorScheme.secondary,
         child: Icon(
@@ -150,11 +290,23 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
           showPatientForm(context);
         },
       ),
+      body: assignedPatients.isEmpty
+          ? const Center(
+              child: CircularProgressIndicator()) // Show loader if no data
+          : ListView.builder(
+              itemCount: assignedPatients.length,
+              itemBuilder: (context, index) {
+                var patient = assignedPatients[index];
+                return patientTile(
+                  patient['Patientname'] ?? "Unknown",
+                  patient['PatientUid'] ?? "Unknown",
+                );
+              },
+            ),
     );
   }
 
-  Widget patientTile(String name, String diagnosis, int totalTasksCompleted,
-      int totalTasksAssigned) {
+  Widget patientTile(String name, String uid) {
     return Padding(
       padding: const EdgeInsets.only(left: 17, right: 17, top: 17),
       child: Container(
@@ -176,15 +328,15 @@ class _DoctorPatientViewState extends State<DoctorPatientView> {
                 ),
               ),
               Text(
-                diagnosis,
+                "Uid: $uid",
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
-              const SizedBox(height: 12),
-              Text("Total Tasks Completed: $totalTasksCompleted"),
-              Text("Total Tasks Assigned: $totalTasksAssigned"),
+              // const SizedBox(height: 12),
+              // Text("Total Tasks Completed: $totalTasksCompleted"),
+              // Text("Total Tasks Assigned: $totalTasksAssigned"),
             ],
           ),
         ),
