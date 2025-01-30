@@ -157,15 +157,15 @@ class _TaskPageState extends State<TaskPage> {
   Widget gameCard(String gName, int pgSelector, String assignedDate) {
     // Map game names to image assets
     Map<String, String> gameImages = {
-      "Color Game": "assets/images/color_game.png",
-      "Memory Game": "assets/images/memory_game.png",
+      "Color Game": "assets/images/colorGamePic.png",
+      "Memory Game": "assets/images/MemoryGamePic.png",
       "Tetris": "assets/images/tetris_game.png",
-      "Flappy Bird": "assets/images/flappy_bird.png",
-      "Brick Breaker": "assets/images/brick_breaker.png",
-      "Snake Game": "assets/images/snake_game.png",
-      "Eye Travel": "assets/images/eye_exercise.png",
-      "Blink Eyes": "assets/images/blink_test.png",
-      "Odd one Out": "assets/images/odd_out.png",
+      "Flappy Bird": "assets/images/bird.png",
+      "Brick Breaker": "assets/images/brickBreaker.png",
+      "Snake Game": "assets/images/snake.png",
+      "Eye Travel": "assets/images/eyeGame.png",
+      "Blink Eyes": "assets/images/eye.png",
+      "Odd one Out": "assets/images/oddOut.png",
     };
 
     return Container(
