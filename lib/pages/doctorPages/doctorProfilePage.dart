@@ -120,7 +120,7 @@ class _doctorProfilePageState extends State<doctorProfilePage> {
           const Spacer(),
 
           GestureDetector(
-              child: Image(
+              child: const Image(
                 image: AssetImage('assets/images/seeInsights.png'),
                 width: 400,
                 height: 300,
@@ -128,10 +128,11 @@ class _doctorProfilePageState extends State<doctorProfilePage> {
               onTap: () {
                 Navigator.of(context).push(
                     // Insights Page Here
-                    MaterialPageRoute(builder: (context) => InsightsPage()));
+                    MaterialPageRoute(
+                        builder: (context) => const InsightsPage()));
               }),
 
-          SizedBox(
+          const SizedBox(
             height: 36,
           ),
 
