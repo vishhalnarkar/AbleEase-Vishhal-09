@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 import 'package:ableeasefinale/pages/games/OddOut.dart';
 import 'package:ableeasefinale/pages/games/Testris%20Game/board.dart';
 import 'package:ableeasefinale/pages/games/brickBreaker/brickHome.dart';
@@ -5,8 +9,6 @@ import 'package:ableeasefinale/pages/games/color_game_r.dart';
 import 'package:ableeasefinale/pages/games/flappyBird/flappyPage.dart';
 import 'package:ableeasefinale/pages/games/memory_game/memory_gameR.dart';
 import 'package:ableeasefinale/pages/games/snakeGame/home_page.dart';
-import 'package:flutter/material.dart';
-
 import '../eyeBlink_Game.dart';
 import '../eyeExercise_Game.dart';
 
@@ -18,104 +20,156 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
-  // Serever Data
-  // User tasks
-  // Game Name , Game image, assigned on
+  late String userUid;
+  late String patientUid;
+  late List<DocumentSnapshot> tasksList;
+
+  List<String> games = [
+    "Color Game",
+    "Memory Game",
+    "Tetris Game",
+    "Flappy Bird",
+    "Brick Breaker",
+    "Snake Game",
+    "Eye Exercise",
+    "Blink Test",
+    "Odd Color Out",
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    tasksList = []; // Initialize tasksList
+    getUserUid();
+  }
+
+  // Fetch the logged-in user's UID and PatientUid from Firestore
+  Future<void> getUserUid() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      userUid = user.uid;
+      print("User UID: $userUid"); // Debugging line
+      fetchPatientUid();
+    } else {
+      print("User not logged in.");
+    }
+  }
+
+  // Fetch PatientUid from the users collection
+  Future<void> fetchPatientUid() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Fetch the user document using the logged-in user's UID
+    DocumentSnapshot userDoc = await firestore
+        .collection('patient')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    if (userDoc.exists) {
+      // Get the PatientUid from the user document
+      patientUid = userDoc['PatientUid'];
+      print("PatientUid: $patientUid"); // Debugging line
+
+      // Now fetch tasks based on the PatientUid
+      fetchTasks();
+    } else {
+      // Handle the case where the user document is not found
+      print("User document not found.");
+    }
+  }
+
+  // Fetch tasks assigned to the user from Firestore using PatientUid
+  Future<void> fetchTasks() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Fetch tasks collection where the PatientUid matches the fetched PatientUid
+    QuerySnapshot snapshot = await firestore
+        .collection('tasks')
+        .where('PatientUid', isEqualTo: patientUid)
+        .get();
+
+    print("Fetched tasks: ${snapshot.docs.length}"); // Debugging line
+
+    setState(() {
+      tasksList = snapshot.docs; // Assign the fetched documents to tasksList
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<String> assignedGame = [
-      "Odd Color Out",
-      "Tetris Game",
-      "Blink Test",
-      "Brick Breaker",
-      "Memory Game",
-      "Color Game",
-      "Snake Game",
-      "Flappy Bird",
-      "Eye Exercise",
-      "Snake Game",
-    ];
-
-    List<String> games = [
-      "Color Game",
-      "Memory Game",
-      "Tetris Game",
-      "Flappy Bird",
-      "Brick Breaker",
-      "Snake Game",
-      "Eye Exercise",
-      "Blink Test",
-      "Odd Color Out",
-    ];
-
-    List<String> gameImagePaths = [
-      "assets/images/colorGamePic.png",
-      "assets/images/MemoryGamePic.png",
-      "assets/images/tetris_game.png",
-      "assets/images/bird.png",
-      "assets/images/brickBreaker.png",
-      "assets/images/snake.png",
-      "assets/images/eye.png",
-      "assets/images/eyeGame.png",
-      "assets/images/OddOut.png",
-    ];
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              leading: null,
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              bottom: const TabBar(tabs: [
-                Tab(
-                  text: "Pending",
-                ),
-                Tab(
-                  text: "Completed",
-                ),
-              ]),
-              title: const Center(
-                child: Text(
-                  "All Tasks",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                  ),
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: null,
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            bottom: const TabBar(tabs: [
+              Tab(
+                text: "Pending",
+              ),
+              Tab(
+                text: "Completed",
+              ),
+            ]),
+            title: const Center(
+              child: Text(
+                "All Tasks",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
                 ),
               ),
             ),
-            body: TabBarView(children: [
-              Container(
-                color: Theme.of(context).colorScheme.surface,
-                child: ListView(
-                  children: [
-                    for (int i = 0; i < games.length; i++)
-                      gameCard(
-                          gameImagePaths[games.indexOf(assignedGame[i])],
-                          games[games.indexOf(assignedGame[i])],
-                          games.indexOf(assignedGame[i]),
-                          "13/01/2025"),
+          ),
+          body: TabBarView(children: [
+            Container(
+              color: Theme.of(context).colorScheme.surface,
+              child: tasksList.isEmpty
+                  ? const Center(
+                      child: Text(
+                          "No tasks available")) // Show message if no tasks
+                  : ListView.builder(
+                      itemCount: tasksList.length,
+                      itemBuilder: (context, index) {
+                        // Extract task details from Firestore data
+                        var task = tasksList[index];
+                        String gameName = task['GameName'];
+                        // String assignedDate = task['assignedDate'];
 
-                    // for (int i = 0; i < games.length; i++)
-                    //   gameCard(gameImagePaths[i], games[i], i, "13/01/2025"),
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.yellow,
-              )
-            ]),
-          )),
+                        // You can use the `games` list to find the correct pgSelector
+                        int pgSelector = games.indexOf(gameName);
+
+                        return gameCard(gameName, pgSelector, 'assignedDate');
+                      },
+                    ),
+            ),
+            Container(
+              color: Colors.yellow,
+            ),
+          ]),
+        ),
+      ),
     );
   }
 
-  Widget gameCard(
-      String imgPath, String gName, int pgSelector, String assignedDate) {
+  Widget gameCard(String gName, int pgSelector, String assignedDate) {
+    // Map game names to image assets
+    Map<String, String> gameImages = {
+      "Color Game": "assets/images/colorGamePic.png",
+      "Memory Game": "assets/images/MemoryGamePic.png",
+      "Tetris": "assets/images/tetris_game.png",
+      "Flappy Bird": "assets/images/bird.png",
+      "Brick Breaker": "assets/images/brickBreaker.png",
+      "Snake Game": "assets/images/snake.png",
+      "Eye Travel": "assets/images/eyeGame.png",
+      "Blink Eyes": "assets/images/eye.png",
+      "Odd one Out": "assets/images/oddOut.png",
+    };
+
     return Container(
-      height: 203,
+      height: 230, // Increased height for image
       margin: const EdgeInsets.only(top: 25, left: 20, right: 20),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
@@ -133,37 +187,27 @@ class _TaskPageState extends State<TaskPage> {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 110,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      gName,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    color: Colors.white,
-                    child: Image.asset(
-                      imgPath,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
+            // Display game image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                gameImages[gName] ??
+                    "assets/images/default.png", // Default if missing
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(height: 10),
+            Text(
+              gName,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 5),
             Divider(
               height: 5,
               color: Theme.of(context).colorScheme.onSecondary,
@@ -180,15 +224,15 @@ class _TaskPageState extends State<TaskPage> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => switch (pgSelector) {
-                          0 => const ColorGameR(), // Color Game
-                          1 => const MemoryGame(), // Memory Game
-                          2 => const GameBoard(), // Tetris Game
-                          3 => const FlappyPage(), // Flappy Bird
-                          4 => const BrickHome(), // Brick Breaker
-                          5 => const SnakeGame(), // Snake Game
-                          6 => const EyeExercise(), // Eye Exercise
-                          7 => const EyeBlink(), // Blink Test
-                          8 => const Oddout(), // Odd Color Out
+                          0 => const ColorGameR(),
+                          1 => const MemoryGame(),
+                          2 => const GameBoard(),
+                          3 => const FlappyPage(),
+                          4 => const BrickHome(),
+                          5 => const SnakeGame(),
+                          6 => const EyeExercise(),
+                          7 => const EyeBlink(),
+                          8 => const Oddout(),
                           int() => throw UnimplementedError(),
                         },
                       ),
@@ -209,7 +253,7 @@ class _TaskPageState extends State<TaskPage> {
                         Icons.arrow_forward_ios_rounded,
                         color: Theme.of(context).colorScheme.secondary,
                         size: 16,
-                      )
+                      ),
                     ],
                   ),
                 ),

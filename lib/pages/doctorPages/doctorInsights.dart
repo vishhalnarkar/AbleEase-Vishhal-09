@@ -1,14 +1,15 @@
+import 'package:ableeasefinale/pages/doctorPages/doctorLineChart.dart';
 import 'package:ableeasefinale/theme/linechart.dart';
 import 'package:flutter/material.dart';
 
-class InsightsPage extends StatefulWidget {
-  const InsightsPage({super.key});
+class doctorInsightsPage extends StatefulWidget {
+  const doctorInsightsPage({super.key});
 
   @override
-  State<InsightsPage> createState() => _InsightsPageState();
+  State<doctorInsightsPage> createState() => _doctorInsightsPageState();
 }
 
-class _InsightsPageState extends State<InsightsPage> {
+class _doctorInsightsPageState extends State<doctorInsightsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +29,10 @@ class _InsightsPageState extends State<InsightsPage> {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(
-                height: 300,
-                width: 500,
-                child: DoctorPatientChart(), // Display doctor-patient chart
+              SizedBox(
+                height: 350,
+                width: 350,
+                child: doctorLineChart(), // Display doctor-patient chart
               ),
             ],
           ),

@@ -42,9 +42,9 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
-                // return const ParentPage();
                 return const doctorParentPage();
-                // return const DoctorSignIn();
+                // return const LoginPage();
+                // return const doctorParentPage();
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text('${snapshot.error}'),
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
             }
 
             // return const LoginPage();
-            return doctorLineChart();
+            return doctorProfilePage();
             // return const DoctorSignIn();
           },
         ),

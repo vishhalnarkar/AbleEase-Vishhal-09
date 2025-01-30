@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types, file_names
 import 'package:ableeasefinale/pages/UI/insightsPage.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorInsights.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorLineChart.dart';
 import 'package:ableeasefinale/resources/auth_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +15,7 @@ class doctorProfilePage extends StatefulWidget {
 
 class _doctorProfilePageState extends State<doctorProfilePage> {
   var authMethods = AuthMethods();
-  String username = "";
+  String username = "Jayesh";
 
   @override
   void initState() {
@@ -128,8 +130,7 @@ class _doctorProfilePageState extends State<doctorProfilePage> {
               onTap: () {
                 Navigator.of(context).push(
                     // Insights Page Here
-                    MaterialPageRoute(
-                        builder: (context) => const InsightsPage()));
+                    MaterialPageRoute(builder: (context) => doctorLineChart()));
               }),
 
           const SizedBox(

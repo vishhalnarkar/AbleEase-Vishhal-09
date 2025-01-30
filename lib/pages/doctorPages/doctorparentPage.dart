@@ -5,6 +5,7 @@ import 'package:ableeasefinale/pages/UI/profilePage.dart';
 import 'package:ableeasefinale/pages/disability_page.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorHomePage.dart';
 import 'package:ableeasefinale/pages/doctorPages/doctorPatientView.dart';
+import 'package:ableeasefinale/pages/doctorPages/doctorProfilePage.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
@@ -32,7 +33,7 @@ class DoctorParentPageState extends State<doctorParentPage> {
         ch = const MedPage();
         break;
       case 3:
-        ch = const ProfilePage();
+        ch = const doctorProfilePage();
         break;
       default:
         ch = const DisabilityPage();
@@ -61,7 +62,7 @@ class DoctorParentPageState extends State<doctorParentPage> {
             ),
           ),
           CurvedNavigationBarItem(
-            child: Icon(CommunityMaterialIcons.gamepad_variant, size: 35),
+            child: Icon(Icons.healing_outlined, size: 35),
           ),
           CurvedNavigationBarItem(
             child: Icon(CommunityMaterialIcons.meditation, size: 35),
