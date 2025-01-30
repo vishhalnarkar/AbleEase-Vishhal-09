@@ -214,7 +214,7 @@ class _doctorHomePageState extends State<doctorHomePage> {
                     ),
                     Expanded(
                       child: Text(
-                        'Dr.$username',
+                        'Dr. Jayesh',
                         style: TextStyle(
                             fontSize: 40, fontWeight: FontWeight.w400),
                         maxLines: 1,
