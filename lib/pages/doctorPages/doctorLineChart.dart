@@ -101,8 +101,8 @@ class doctorLineChart extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.center,
-              height: 350,
-              width: 350,
+              height: 300,
+              width: 300,
               child: Center(
                 child: LineChart(LineChartData(
                   minX: 0,
