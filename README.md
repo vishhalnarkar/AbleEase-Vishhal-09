@@ -30,7 +30,10 @@
 
 ## 📸 Screenshots
 
-_Add screenshots of the app’s main features here for better visibility._
+![1](https://github.com/user-attachments/assets/c086b77e-0b45-4267-b35f-7d99d56d57f3)
+![2](https://github.com/user-attachments/assets/5b30fcfc-9cd0-4359-8b35-54d3a15675eb)
+
+
 
 ---
 
